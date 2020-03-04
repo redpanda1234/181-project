@@ -159,6 +159,13 @@ everywhere else:
     \node (hdots) at (\hdx, \hdy) {\huge $\cdots$};
 
 
+    % Turing machine head
+    \pgfmathsetmacro{\tmhx}{\sqs*.5}
+    \pgfmathsetmacro{\tmhy}{\sqs*(-1.5)}
+    \node[circle, draw=black] (head) at (\tmhx, \tmhy) {$q_0$};
+    \draw[-latex] ($(head) + (0, 0.5)$) -- ($(\tmhx, 0) + (0, -.1)$);
+
+
   \end{tikzpicture}
   \caption{Turing machine with the input string $\sigma_1 \sigma_2
     \sigma_3 \sigma_4 \sigma_5$}
