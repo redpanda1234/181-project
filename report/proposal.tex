@@ -7,6 +7,7 @@
 % Turing machine commands and stuff
 \newcommand{\acceptState}{{\rm Accept}}
 \newcommand{\rejectState}{{\rm Reject}}
+\newcommand{\blank}{\textvisiblespace}
 
 \newcommand{\acc}{\cmark}
 \newcommand{\rej}{\cmark}
@@ -82,9 +83,9 @@ context.\footnote{Here, ``equivalent'' means that the models of
       \end{enumerate}
     \item $F \subseteq Q$ and $\Sigma \subseteq \Gamma$;
     \item $Q$ contains a distinguished element $q_0$, called the
-      \emph{start state};
-    \item $\Gamma$ contains a distinguished element $b$ called the
-      \emph{blank character} (we require $b \not \in \Sigma$);
+      \emph{start state} or \emph{initial state};
+    \item $\Gamma$ contains a distinguished element $\blank$ called the
+      \emph{blank character} (we require $\blank \not \in \Sigma$);
     \item $\delta$ (called the \emph{transition function}) has the
       following properties:
       \begin{enumerate}[label=\roman*)]
@@ -106,17 +107,24 @@ everywhere else:
   \begin{tikzpicture}
 
     % Define cell height (sqs == `square side')
-    \pgfmathsetmacro{\sqs}{1}
+    \pgfmathsetmacro{\sqs}{.8}
 
-    % Number of tape cells to draw
+    % mincell gives the x coordinate of the leftmost cell, basically
+    \pgfmathsetmacro{\mincell}{2}
+
+    % Number of tape cells to draw total
     \pgfmathsetmacro{\numcells}{10}
 
+    % How far to the right to go
+    \pgfmathsetmacro{\maxcell}{\numcells - \mincell}
+
     % Define how far left/right the diagram should go so that we can
-    \pgfmathsetmacro{\xmax}{\sqs * (\numcells + 2)}
+    \pgfmathsetmacro{\xmax}{\sqs * (\maxcell + 2)}
+    \pgfmathsetmacro{\xmin}{\sqs * -1*(\mincell + 3)}
 
     % Draw tape extending outwards
-    \draw (0,0) -- (\xmax, 0);
-    \draw (0,\sqs) -- (\xmax, \sqs);
+    \draw (\xmin,0) -- (\xmax, 0);
+    \draw (\xmin,\sqs) -- (\xmax, \sqs);
 
 
     % Let's actually assume we only write right for now
@@ -124,7 +132,7 @@ everywhere else:
 
 
     % Draw the cells of the work tape
-    \foreach \x in {1, ..., \numcells}{
+    \foreach \x in {-\mincell, ..., \maxcell}{
       % Left corner coordinates (we choose bottom left corner)
       \pgfmathsetmacro{\lcx}{\sqs * (\x-1)} % Correct an off-by-one error
       \pgfmathsetmacro{\lcy}{0}
@@ -144,20 +152,31 @@ everywhere else:
     }
 
     % Write the blank characters
-    \foreach \x in {6, ..., \numcells}{
+    \foreach \x in {6, ..., \maxcell}{
       \pgfmathsetmacro{\labelx}{\sqs*(\x -.5)}
-      \pgfmathsetmacro{\labely}{\sqs*.5}
-      \node (sg\x) at (\labelx, \labely) {$b$};
+      \pgfmathsetmacro{\labely}{\sqs*.35}
+      \node (sg\x) at (\labelx, \labely) {$\blank$};
     }
+    \foreach \x in {-\mincell, ..., 0}{
+      \pgfmathsetmacro{\labelx}{\sqs*(\x -.5)}
+      \pgfmathsetmacro{\labely}{\sqs*.35}
+      \node (sg\x) at (\labelx, \labely) {$\blank$};
+    }
+
 
     % We wanna draw horizontal dots to indicate the tape continues; we
     % calculate the coordinates here
-    \pgfmathsetmacro{\hdx}{\sqs*(\numcells+1)}
-    \pgfmathsetmacro{\hdy}{\sqs*.5}
+    % Make the coordinates for the left one
+    \pgfmathsetmacro{\hdlx}{\sqs*(\maxcell+1)}
+    \pgfmathsetmacro{\hdly}{\sqs*.5}
+
+    % Make the coordinates for the right one
+    \pgfmathsetmacro{\hdrx}{\sqs*(\mincell-6)}
+    \pgfmathsetmacro{\hdry}{\sqs*.5}
 
     % Draw the horizontal dots extending to the right
-    \node (hdots) at (\hdx, \hdy) {\huge $\cdots$};
-
+    \node (rhdots) at (\hdlx, \hdly) {\huge $\cdots$};
+    \node (lhdots) at (\hdrx, \hdry) {\huge $\cdots$};
 
     % Turing machine head
     \pgfmathsetmacro{\tmhx}{\sqs*.5}
@@ -165,10 +184,12 @@ everywhere else:
     \node[circle, draw=black] (head) at (\tmhx, \tmhy) {$q_0$};
     \draw[-latex] ($(head) + (0, 0.5)$) -- ($(\tmhx, 0) + (0, -.1)$);
 
-
   \end{tikzpicture}
   \caption{Turing machine with the input string $\sigma_1 \sigma_2
     \sigma_3 \sigma_4 \sigma_5$}
 \end{figure}
+Suppose $\delta(q_0, \sigma_1) = (q_i, \gamma_1, R)$. Then we
+interpret this as the Turing machine writing a $\gamma_1$ on the
+current tape,
 
 \end{document}
