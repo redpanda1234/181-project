@@ -2,4 +2,6 @@
 *.log
 *.out
 *.pre
+*.bbl
+*.blg
 **/auto/
