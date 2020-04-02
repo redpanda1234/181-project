@@ -17,10 +17,51 @@
 	author = {Delvenne, Jean-Charles and Kurka, Petr and Blondel, Vincent},
 	title = {{Decidability and Universality in Symbolic Dynamical Systems}},
 	journal = {arXiv},
-	year = {2004},
+	year = 2004,
 	month = {Apr},
 	eprint = {cs/0404021},
-	url = {https://arxiv.org/abs/cs/0404021}
+	url = {https://arxiv.org/abs/cs/0404021},
+        annotate = {In this paper, the authors examine generalizations
+                  of abstract Turing machines to the case of dynamical
+                  systems on symbolic spaces (compact metric spaces
+                  whose clopen sets form a countable basis). Since
+                  every compact metric space can be realized as the
+                  continuous image of the Cantor set, we can think
+                  of any symbolic space (up to homeomorphism) as
+                  being represented by a closed subset of the Cantor
+                  set. As a first example, the authors consider
+                  consider a simple dynamical-systems-flavored
+                  statement of the halting problem: namely, given an
+                  \emph{effective} system $f : X \to X$ and clopen
+                  subsets $U,V \subseteq X$, does there exist $x \in U$,
+                  $n \in \NN$ such that $f^{(n)}(x) \in V$? Similar
+                  formulations are given for other variants of the
+                  halting problem, with some discussion of
+                  corresponding automata, as well as the concept of
+                  decidability. \\\\
+
+                  After these introductury concepts, the authors give
+                  the definition of ``computational universality''
+                  that they employ in their analysis. In addition to
+                  examples from Turing machines, the authors
+                  demonstrate how the definition applies to cases such
+                  as \emph{cellular automata}, \emph{tag systems}, and
+                  \emph{Collatz functions}. They then prove some
+                  results linking the computational power of a system
+                  to its dynamical properties (e.g., Proposition 6:
+                  given an effective system such that for any
+                  transition function, the ``observation system''
+                  (defined earlier in the paper) has clopen basins,
+                  then the system is decidable). Some results relating
+                  to shadowing properties and equicontinuity are also
+                  proven.
+
+                  Finally, the authors conclude with an example of a
+                  chaotic system that is computationally universal
+                  (previously thought to be impossible), and discuss
+                  how the shadowing property might provide a better
+                  heuristic for computational universality.
+}
 }
 
 @article{Koiran1994Sep,
@@ -34,7 +75,24 @@
 	month = {Sep},
 	issn = {0304-3975},
 	publisher = {Elsevier},
-	doi = {10.1016/0304-3975(94)90229-1}
+	doi = {10.1016/0304-3975(94)90229-1},
+        annotate = {Inspired by first-order recurrent neural networks,
+                  the authors examine the extent to which the
+                  computational universality of piecewise-linear maps
+                  is dependent on the dimension of the space. They
+                  prove that there exists functions in $PL_2$
+                  (piecewise-linear maps from $\RR^2$ to $\RR^2$) that
+                  are universal (in the sense that they can simulate
+                  an arbitrary Turing machine), but are not capable of
+                  simulating arbitrary cellular automata unless the
+                  initial configuration is finite. By contrast, they
+                  show that $PL_1$ maps are not Turing-complete by
+                  employing a result that states 1D PL maps cannot
+                  have infinitely-many period-$k$ cycles for
+                  infinitely-many $k$. However, they show that if the
+                  hypotheses are weakened to allow \emph{countably} PL
+                  maps or continuous piecewise-monotone functions,
+                  then we do obtain Turing completeness.}
 }
 
 @article{Moore1990May,
@@ -115,7 +173,8 @@
 	month = {Jan},
 	issn = {1567-8326},
 	publisher = {North-Holland},
-	doi = {10.1016/j.jlap.2003.10.001}
+	doi = {10.1016/j.jlap.2003.10.001},
+        annotate = {Hi! We didn't get around to reading this one yet.}
 }
 
 @article{Siegelmann1998Sep,
