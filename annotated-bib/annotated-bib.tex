@@ -1,0 +1,32 @@
+\documentclass{fkletter}
+
+% Preamble stuff
+% ------------------------------------------------------------------ %
+
+% Just for positioning the diagram I included
+\usepackage{float}
+
+% For use in the like single equation I added (lol?)
+\usepackage{fkmath}
+
+% For the header/footer things
+\usepackage{lastpage}
+\usepackage{fancyhdr}
+\pagestyle{fancy}
+\fancyhf{}
+\lhead{F.\ Kobayashi, M.\ LeMay}
+\chead{Annotated Bibliography}
+\rhead{Dynamical Systems and Computability}
+\lfoot{Thursday, April 2\textsuperscript{nd} 2020}
+\rfoot{\thepage\ of \pageref{LastPage}}
+
+% ------------------------------------------------------------------ %
+% End preamble stuff
+
+\begin{document}
+
+\nocite{*}
+\bibliographystyle{annotate}
+\bibliography{bibbib}
+
+\end{document}

@@ -1,0 +1,193 @@
+@article{Kurka1997Mar,
+	author = {K{\ifmmode\mathring{u}\else\r{u}\fi}rka, Petr},
+	title = {{On topological dynamics of Turing machines}},
+	journal = {Theoretical Computer Science},
+	volume = {174},
+	number = {1},
+	pages = {203--216},
+	year = {1997},
+	month = {Mar},
+	issn = {0304-3975},
+	publisher = {Elsevier},
+	doi = {10.1016/S0304-3975(96)00025-4},
+    annotate={This paper defines two dynamical systems based on the motion of the Turing Machine head and analyzes their behavior. It is interesting because it analyzes Turing Machines as dynamical systems, just like the Siegelmann paper analyzes dynamical systems as models of computation. }
+}
+
+@article{Delvenne2004Apr,
+	author = {Delvenne, Jean-Charles and Kurka, Petr and Blondel, Vincent},
+	title = {{Decidability and Universality in Symbolic Dynamical Systems}},
+	journal = {arXiv},
+	year = 2004,
+	month = {Apr},
+	eprint = {cs/0404021},
+	url = {https://arxiv.org/abs/cs/0404021},
+        annotate = {In this paper, the authors examine generalizations
+                  of abstract Turing machines to the case of dynamical
+                  systems on symbolic spaces (compact metric spaces
+                  whose clopen sets form a countable basis). Since
+                  every compact metric space can be realized as the
+                  continuous image of the Cantor set, we can think
+                  of any symbolic space (up to homeomorphism) as
+                  being represented by a closed subset of the Cantor
+                  set. As a first example, the authors consider
+                  consider a simple dynamical-systems-flavored
+                  statement of the halting problem: namely, given an
+                  \emph{effective} system $f : X \to X$ and clopen
+                  subsets $U,V \subseteq X$, does there exist $x \in U$,
+                  $n \in \NN$ such that $f^{(n)}(x) \in V$? Similar
+                  formulations are given for other variants of the
+                  halting problem, with some discussion of
+                  corresponding automata, as well as the concept of
+                  decidability. \\\\
+
+                  After these introductury concepts, the authors give
+                  the definition of ``computational universality''
+                  that they employ in their analysis. In addition to
+                  examples from Turing machines, the authors
+                  demonstrate how the definition applies to cases such
+                  as \emph{cellular automata}, \emph{tag systems}, and
+                  \emph{Collatz functions}. They then prove some
+                  results linking the computational power of a system
+                  to its dynamical properties (e.g., Proposition 6:
+                  given an effective system such that for any
+                  transition function, the ``observation system''
+                  (defined earlier in the paper) has clopen basins,
+                  then the system is decidable). Some results relating
+                  to shadowing properties and equicontinuity are also
+                  proven.
+
+                  Finally, the authors conclude with an example of a
+                  chaotic system that is computationally universal
+                  (previously thought to be impossible), and discuss
+                  how the shadowing property might provide a better
+                  heuristic for computational universality.
+}
+}
+
+@article{Koiran1994Sep,
+	author = {Koiran, Pascal and Cosnard, Michel and Garzon, Max},
+	title = {{Computability with low-dimensional dynamical systems}},
+	journal = {Theoretical Computer Science},
+	volume = {132},
+	number = {1},
+	pages = {113--128},
+	year = {1994},
+	month = {Sep},
+	issn = {0304-3975},
+	publisher = {Elsevier},
+	doi = {10.1016/0304-3975(94)90229-1},
+        annotate = {Inspired by first-order recurrent neural networks,
+                  the authors examine the extent to which the
+                  computational universality of piecewise-linear maps
+                  is dependent on the dimension of the space. They
+                  prove that there exists functions in $PL_2$
+                  (piecewise-linear maps from $\RR^2$ to $\RR^2$) that
+                  are universal (in the sense that they can simulate
+                  an arbitrary Turing machine), but are not capable of
+                  simulating arbitrary cellular automata unless the
+                  initial configuration is finite. By contrast, they
+                  show that $PL_1$ maps are not Turing-complete by
+                  employing a result that states 1D PL maps cannot
+                  have infinitely-many period-$k$ cycles for
+                  infinitely-many $k$. However, they show that if the
+                  hypotheses are weakened to allow \emph{countably} PL
+                  maps or continuous piecewise-monotone functions,
+                  then we do obtain Turing completeness.}
+}
+
+@article{Moore1990May,
+	author = {Moore, Cristopher},
+	title = {{Unpredictability and undecidability in dynamical systems}},
+	journal = {Phys. Rev. Lett.},
+	volume = {64},
+	number = {20},
+	pages = {2354--2357},
+	year = {1990},
+	month = {May},
+	issn = {1079-7114},
+	publisher = {American Physical Society},
+	doi = {10.1103/PhysRevLett.64.2354},
+	annotate = {This paper analyzes the decidability of questions about three-dimensional dynamical systems. It is interesting because it examines the complexity of questions we might want to ask about dynamical systems.}
+}
+
+
+@article{Benci2004,
+	author = {Benci, Vieri and Bonanno, C. and Galatolo, Stefano and Menconi, G. and Virgilio, M.},
+	title = {{Dynamical systems and computable information}},
+	journal = {Discrete {\&} Continuous Dynamical Systems - B},
+	volume = 4,
+	number = 4,
+	pages = 935,
+	year = 2004,
+	publisher = {American Institute of Mathematical Sciences},
+	doi = {10.3934/dcdsb.2004.4.935},
+        annotate = {In this paper, the authors examine the connections
+                  between information theory and dynamical systems.
+                  Particular attention is payed to the concept of
+                  \emph{entropy}, paticularly in the contexts of
+                  \emph{strings in a measure space} and the
+                  \emph{relative entropy of a measure} (defined by the
+                  Kullback-Leibler divergence of an ergodic measure
+                  with respect to the standard Lebesgue measure). The
+                  authors then prove that certain conditions on the
+                  entropy of the measure can be used to obtain bounds
+                  on the amount of information required to describe
+                  orbits of the dynamical system. To this end, the
+                  authors present both theoretical results and
+                  ``experimental'' results (computations) for certain
+                  dynamical systems, e.g.\ the so-called
+                  \emph{Manneville map} $T : [0,1] \to [0,1]$ defined
+                  by
+                  \[
+                    T(x) = \pn{x + x^z} \bmod 1
+                  \]
+                  where $z > 1$ (example plotted below)
+                  \begin{figure}[H]
+                    \centering
+                    \hspace{2cm}
+                    \includegraphics[scale=.75]{julia/1.pdf}
+                  \end{figure}
+                  \noindent Overall: This paper provides an
+                  interesting second perspective on how classical
+                  ideas in computing intersect with dynamical systems.
+                  In some ways the analysis appears to be more
+                  tractable than that appearing in the papers we have
+                  read that examine the dynamics of turing machines.
+                  However, it is likely that our paper will not
+                  emphasize the ideas in this paper as much --- if we
+                  employ it, it will probably be primarily for the
+                  introduction to information theory in ergodic
+                  systems it gives, and less for the actual results
+                  proved.
+}
+}
+
+@article{Tucker2005Jan,
+	author = {Tucker, J. V. and Zucker, J. I.},
+	title = {{Computable total functions on metric algebras, universal algebraic specifications and dynamical systems}},
+	journal = {Journal of Logic and Algebraic Programming},
+	volume = {62},
+	number = {1},
+	pages = {71--108},
+	year = {2005},
+	month = {Jan},
+	issn = {1567-8326},
+	publisher = {North-Holland},
+	doi = {10.1016/j.jlap.2003.10.001},
+        annotate = {Hi! We didn't get around to reading this one yet.}
+}
+
+@article{Siegelmann1998Sep,
+	author = {Siegelmann, Hava T. and Fishman, Shmuel},
+	title = {{Analog computation with dynamical systems}},
+	journal = {Physica D},
+	volume = {120},
+	number = {1},
+	pages = {214--235},
+	year = {1998},
+	month = {Sep},
+	issn = {0167-2789},
+	publisher = {North-Holland},
+	doi = {10.1016/S0167-2789(98)00057-8},
+	annotate = {This paper presents a way to understand the behavior of continuous dynamical systems as a form of computation. It is interesting because it talks about dynamical systems as models of computation, and analyzes them using tools from computational complexity.}
+}
