@@ -1,0 +1,121 @@
+\documentclass{standalone}
+\usepackage{tikz}
+\usetikzlibrary{calc}
+
+
+\usepackage{fkmath}
+% Turing machine commands and stuff
+\newcommand{\acceptState}{{\rm Accept}}
+\newcommand{\rejectState}{{\rm Reject}}
+\newcommand{\blank}{\textvisiblespace}
+
+\newcommand{\acc}{\cmark}
+\newcommand{\rej}{\cmark}
+
+\newcommand{\lnext}{\circ}
+\newcommand{\ltil}{\mathcal{U}}
+\newcommand{\psc}{\mathcal{P}}
+
+
+
+
+
+\begin{document}
+  \begin{tikzpicture}
+
+    % Define cell height (sqs == `square side')
+    \pgfmathsetmacro{\sqs}{.8}
+
+    % mincell gives the x coordinate of the leftmost cell, basically
+    \pgfmathsetmacro{\mincell}{2}
+
+    % Number of tape cells to draw total
+    \pgfmathsetmacro{\numcells}{10}
+
+    % How far to the right to go
+    \pgfmathsetmacro{\maxcell}{\numcells - \mincell}
+
+    % Define how far left/right the diagram should go so that we can
+    \pgfmathsetmacro{\xmax}{\sqs * (\maxcell + 2)}
+    \pgfmathsetmacro{\xmin}{\sqs * -1*(\mincell + 3)}
+
+    % Draw tape extending outwards
+    \draw (\xmin,0) -- (\xmax, 0);
+    \draw (\xmin,\sqs) -- (\xmax, \sqs);
+
+
+    % Let's actually assume we only write right for now
+    % \pgfmathsetmacro{\min}{\sqs * (\numcells + 3)}
+
+
+    % Draw the cells of the work tape
+    \foreach \x in {-\mincell, ..., \maxcell}{
+      % Left corner coordinates (we choose bottom left corner)
+      \pgfmathsetmacro{\lcx}{\sqs * (\x-1)} % Correct an off-by-one error
+      \pgfmathsetmacro{\lcy}{0}
+
+      % Right corner coordinates (we choose top right corner)
+      \pgfmathsetmacro{\rcx}{\sqs * \x}
+      \pgfmathsetmacro{\rcy}{\sqs}
+
+      \draw (\lcx, \lcy) rectangle (\rcx, \rcy);
+    }
+
+    % Write the struck-out version of \sigma_1
+    \node (sg1) at (\sqs*.5, \sqs*.5) {$\color{blue} \gamma_i$};
+
+    % Write the input string, sans sigma_1
+    \foreach \x in {2, ..., 5}{
+      \pgfmathsetmacro{\labelx}{\sqs*(\x -.5)}
+      \pgfmathsetmacro{\labely}{\sqs*.5}
+      \node (sg\x) at (\labelx, \labely) {$\sigma_{\x}$};
+    }
+
+    % Write the blank characters
+    \foreach \x in {6, ..., \maxcell}{
+      \pgfmathsetmacro{\labelx}{\sqs*(\x -.5)}
+      \pgfmathsetmacro{\labely}{\sqs*.35}
+      \node (sg\x) at (\labelx, \labely) {$\blank$};
+    }
+
+    \foreach \x in {-\mincell, ..., 0}{
+      \pgfmathsetmacro{\labelx}{\sqs*(\x -.5)}
+      \pgfmathsetmacro{\labely}{\sqs*.35}
+      \node (sg\x) at (\labelx, \labely) {$\blank$};
+    }
+
+
+    % We wanna draw horizontal dots to indicate the tape continues; we
+    % calculate the coordinates here
+    % Make the coordinates for the left one
+    \pgfmathsetmacro{\hdlx}{\sqs*(\maxcell+1)}
+    \pgfmathsetmacro{\hdly}{\sqs*.5}
+
+    % Make the coordinates for the right one
+    \pgfmathsetmacro{\hdrx}{\sqs*(\mincell-6)}
+    \pgfmathsetmacro{\hdry}{\sqs*.5}
+
+    % Draw the horizontal dots extending to the right
+    \node (rhdots) at (\hdlx, \hdly) {\huge $\cdots$};
+    \node (lhdots) at (\hdrx, \hdry) {\huge $\cdots$};
+
+
+    % Draw the previous head
+    \pgfmathsetmacro{\tmphx}{\sqs*.5}
+    \pgfmathsetmacro{\tmphy}{\sqs*(-1.5)}
+    \node[circle, draw=black, dotted, opacity=.5] (headprev) at (\tmphx, \tmphy) {$q_0$};
+    \draw[-latex, dotted, opacity=.2] ($(headprev) + (0, 0.5)$) -- ($(\tmphx, 0) + (0, -.1)$);
+
+
+    % Turing machine head
+    \pgfmathsetmacro{\tmhx}{\sqs*1.5}
+    \pgfmathsetmacro{\tmhy}{\sqs*(-1.5)}
+    \node[circle, draw=blue] (head) at (\tmhx, \tmhy) {$\color{blue} q_i$};
+    \draw[-latex, blue] ($(head) + (0, 0.5)$) -- ($(\tmhx, 0) + (0, -.1)$);
+
+    % Annotate the transition
+    \draw[->] (headprev) to[bend right=80] (head);
+    \node[below] () at (\sqs, -2.25*\sqs) {$R$};
+
+  \end{tikzpicture}
+\end{document}
