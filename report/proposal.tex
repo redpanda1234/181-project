@@ -12,6 +12,12 @@
 \newcommand{\acc}{\cmark}
 \newcommand{\rej}{\cmark}
 
+%\newcommand{\Nn}{\mathbb{N}}
+\newcommand{\lnext}{\circ}
+\newcommand{\ltil}{\mathcal{U}}
+\newcommand{\psc}{\mathcal{P}}
+
+
 
 \begin{document}
 
@@ -191,5 +197,101 @@ everywhere else:
 Suppose $\delta(q_0, \sigma_1) = (q_i, \gamma_1, R)$. Then we
 interpret this as the Turing machine writing a $\gamma_1$ on the
 current tape, updating its state to $q_1$, and moving one space to the right on the tape.
+
+\section{Computational Universality}
+
+A Universal Turing Machine is a Turing machine which can simulate any arbitrary Turing Machine. It takes as its Turing Machine code, and an input word, and then simulates the Turing Machine on that input. Intuitively, any modern computer is a (finite memory) Universal Turing Machine: it can store arbitrary computer programs as data, and then run them on other data it stores or with user input.
+
+In a similar vein, a system is {\it computationally universal} (or just {\it universal}) if it has the ability to simulate an arbitrary Turing machine. This is a loose definition because it is not immediately clear what it means for a dynamical system to simulate a Turing machine. There are many possible ways to create a more precise definition; we will follow the method of Delvenne et al. [CITATION]. Before we do, though, we note a few reasonable expectations about what simulating a Turing machine should mean:
+
+\begin{itemize}
+	\item If a dynamical system can simulate an arbitrary Turing machine, we should be able to take any combination of Turing machine and input, and convert it into some question about the system. The question should be ``equivalent'' to the question of whether the Turing machine would accept its input, in the sense that it should have a ``yes'' answer if the Turing machine accepts, and a ``no'' answer if the Turing machine rejects or never halts.
+	
+	\item The Universal Turing Machine is a specific Turing Machine that exists, and therefore it is a dynamical system on the space of its possible configurations. We would definitely expect this dynamical system to be considered universal.
+	
+	\item There are a number of other computational models which have ability to simulate Turing Machines, and which can also be considered dynamical systems. One good example is cellular automata, which are like Turing machine tapes where every cell has its own state and updates itself based on its neighbors' states. If a given instance of a computation model is capable of simulating arbitrary Turing machines, we would expect its associated dynamical system to be universal.
+	
+\end{itemize}
+
+\subsection*{Formally defining universality}
+
+We will follow the lead of Delvenne et al. [CITATION] in defining what it means for a dynamical system to be universal. Like them, we will consider only {\it symbolic} dynamical systems, that is, dynamical systems on spaces consisting of infinite words made out of symbols drawn from a finite alphabet. We will need to do some spadework before we're ready to give the full definition.
+
+\subsubsection*{Spadework Part I - R.E.-completeness}
+
+Our ultimate goal is, given the code for a Turing machine $M$, and the input $w$, to ask a question about a particular dynamical system which has a ``yes'' answer exactly when $M$ accepts $w$. In the terms used in the field of computability, we want to be able to reduce an arbitrary instance of the question ``Will Turing machine $M$ accept the input $w$?'' to a question about the dynamical system.
+
+Fortunately, much is already known about the question ``Will Turing machine $M$ accept the input $w$?''. In particular, it is equivalent to the question ``Will Turing machine $M$ halt on the input $w$?'' in the sense that if we had a way to answer either of the questions, we could easily answer the other as well. This second question is called the Halting Problem, and computer scientists say that it is ``complete for the class of recursively enumerable problems.''
+
+So, depending on your background, you may be asking two questions: ``What is the class of recursively enumberable problems?'' and ``What does it mean to be complete for it?'' A problem is called recursively enumerable if it can be solved by a Turing machine that may not ever halt, that is, if the question has a ``yes'' answer, the Turing machine will accept in finite time, but if the question has a ``no'' answer, the machine may run indefinitely. They are called ``recursively enumerable'' because it would be possible for a Turing machine (a computation model capapble of {\it recursion}) to {\it enumerate} every input that would have a ``yes'' answer, in such a way that every such input would eventually be listed in finite time. (The machine could do this by listing all inputs lexicographically, and spending half its time simulating the computation on the first input, a quarter of its time on the second input, and so on, printing out any input when it is accepted.)
+
+A given problem, call it $P$, is complete for a class of problems, $C$, if two conditions hold. First, $P$ must be an element of $C$. Second, all problems in $C$ must be reducible to $P$, meaning that if $P' \in C$, we can convert any instance of $P'$ to an instance of $P$ that will have the same answer, without doing an unreasonable amount of work in the conversion (for our purposes here, any finite computation time is reasonable). The Halting Problem is known to be complete for the recursively enumerable problems, or r.e.-complete.
+
+The question ``Will Turing machine $M$ accept input $w$?'' (call it $Q$) is also r.e.-complete. Recall that our goal was to find a question $QDS$ about a dynamical system, which we could reduce $Q$ to. One way to express this constraint is that $QDS$ should be r.e.-complete: then both $QDS$ and $Q$ could be reduced to each other, so they would be equivalent questions, which is what we are looking for. In fact, we will see that the r.e.-completeness of $QDS$ is exactly what we will require.
+
+\subsubsection*{Spadework Part II - Effectice Symbolic Systems}
+
+A symbolic set can be thought of as a set of words made from a finite alphabet $A$. We could express such a set as $(A \cup \{B\})^\Nn$, meaning the set of one-sided infinite words with characters which are either drawn from $A$ or are the ``blank'' symbol $B$. Finite words would then end be expressed as infinite words ending with an infinite tail of $B$s. But we could encode each element of $A \cup \{B\}$ with a binary sequence (with all encodings the same length), so any symbolic set can be encoded as a subset of the set $\{0,1\}^\Nn$ of one-sided infinite binary words.
+
+We give $\{0,1\}^\Nn$ the following distance metric $d$: $d(x,y) = 0$ if $x$ and $y$ agree at all indices, and otherwise $d(x,y) = 2^{-n}$ where $n$ is the smallest index at which $x$ and $y$ differ. Under this metric, the set of all sequences beginning with a finite binary word $w$ is a both a closed and open set (a ``clopen'' set) under this metric. Call sets like this, generated by a common prefix, cylinders. It can be shown that the clopen sets of $\{0,1\}^\Nn$ are precisely the finite unions of cylinders. What is special about this is that we can associate with each clopen subset of $\{0,1\}^\Nn$ a unique finite set of finite words, which are the generating prefixes for the cylinders that make up that set. So we can express every clopen set of $\{0,1\}^\Nn$ in a finite way, which means the we can list off all the clopen sets in some lexicographic order (in other words, the set is countable). We'll be exploiting this fact later.
+
+Now we're ready to define the main dynamical systems we'll be working with. If $X \subseteq \{0,1\}^\Nn$ is a symbolic set and $f: X \to X$ is a continuous map on $X$, then $(X, f)$ is an {\it effective symbolic system} if:
+\begin{enumerate}[label=(\roman*)]
+	\item $X$ is closed.
+	\item Checking whether some clopen set $Y \subseteq \{0,1\}^\Nn$ has a non-zero intersection with $X$ is decidable by a Turing machine in finite time.
+	\item The inverse map $f^{-1}$ on clopen sets of $X$ can be computed in finite time.
+\end{enumerate}
+
+These requirements may seem a bit arbitrary, but they are made for a good reason. We will shortly be performing some operations on the clopen sets of $X$, and it turns out that, since $X$ is closed, these are exactly the intersections of $X$ with the clopen sets of $\{0,1\}^\Nn$, so we know this is a countable set. Requirement (ii) helps ensure that a Turing machine could list out these clopen sets without ever getting stuck checking if a particular clopen set of $\{0,1\}^\Nn$ has a nonempty intersection with $X$. And requirement (iii) foreshadows operations we will be doing on clopen sets.
+
+\subsubsection*{Spadework Part III - Temporal Logic}
+
+Recall that we are looking for a way to ``ask questions'' about dynamical systems, whose answers will tell us something about the behavior of Turing machines. In order to be able to construct such questions, we will use subsets of state space to encode logical statements. Since we want to be able to make statements about the {\it eventual} behavior of the system, we will use a logical framework called temporal logic. Temporal logic includes all of the standard logical operators:
+\begin{itemize}
+	\item $\top$: always true
+	\item $\bot$: always false
+	\item $\lor$: or
+	\item $\lnot$: not
+	\item $\land$: and (which is actually redundant because it is constructible from $\lor$ and $\lnot$)
+\end{itemize}
+It adds two additional operators to the list:
+\begin{itemize}
+	\item $\lnext$: next, a unary operator, with $\lnext \phi$ meaning that $\phi$ will be true after one time step.
+	\item $\ltil$: until, a binary operator, with $\phi \ltil \psi$ meaning that $\psi$ will be true within finite time, and for all time between the present and one step before the time when $\psi$ is true (inclusive), $\phi$ will be true
+\end{itemize}
+
+The developers of temporal logic, Arthur Prior and Hans Kamp, have described a set of rules for incorporating these operators into classical logic in a way that is consistent with our interpretation of them [CITATION]. For our purposes, suffice it to say that it works.
+
+How do we propose to use temporal logic to construct statements about effective symbolic systems? Well, as we have suggested above, we are interested in operating on the clopen sets of symbolic systems, and here is where that will come into play. Let's say we have some effective dynamical system $(X, f)$. We will use the fact that the clopen subsets of $X$ are countable, and let $P_0, P_1, P_2, ...$ be a listing of all the clopen subsets of $X$ (including $\emptyset$ and $X$ in some positions).
+
+Then let $\psc_0, \psc_1, \psc_2, ...$ be a set of propositional symbols, which are the logical ``units'' that along with the operators above are the building blocks of temporal logic formulas. The listing will contain $\top$ and $\bot$ in some positions. We're going to define an ``interpretation'' operator $\abs{\cdot}$ that takes logical formulas to subsets of $X$. The intuition behind it will be that if $\phi$ is a logical formula that expresses something about the ``current configuration of the system,'' $|\phi|$ is the set of possible system configurations (points of $X$) for which that statement is true. Formally, the operator will behave like this:
+
+\begin{itemize}
+	\item If $\phi$ is just the symbol $\psc_n$, $\abs{\phi} = P_n$, and we stipulate that the orderings should align such that $\abs{\top} = X$ and $\abs{\bot} = \emptyset$. This means that the symbol $\psc_n$ represents the statement ``The current system configuration is in the set $P_n$,'' which is of course always true if $P_n = X$ and never true if $P_n = \emptyset$.
+	
+	\item $\abs{\phi_1 \lor \phi_2} = \abs{\phi_1} \cup \abs{\phi_2}$, because for either $\phi_1$ or $\phi_2$ to be true, the system can be in any state in which either is true.
+	
+	\item $\abs{\lnot \phi} = X \setminus \abs{\phi}$, because the set of states for which $\phi$ is not true is the complement of the set of states for which it is.
+	
+	\item $\abs{\lnext \phi} = f^{-1}\left( \abs{\phi} \right)$, which means that $\lnext \phi$ represents the statement, $\phi$ will be true after one application of $f$, meaning that each application of $f$ corresponds to one ``time step'' within the temporal logic system. Note that we know that this is computable, by requirement (iii) of effective symbolic systems.
+	
+	\item $\abs{\phi_1 \ltil \phi_2} = \bigcup_{n \in \Nn} A_n$ with $A_0 = \abs{\phi_2}$ and the other sets defined by the recurrence relation $A_{n+1} = f^{-1}(A_n)\cap\abs{\phi_1}$. Here $A_n$ can be interpreted as, the set of system states for which $\phi_2$ will be true on the $n^{\text{th}}$ time step from the current state, and $\phi_1$ will be true on the $0,...n-1$ time steps. The union of all of these represents all states for which ``$\phi_1$ is true until $\phi_2$ is eventually true.''
+	
+	So, in short, we have used temporal logic to construct a set of formula that express statements about the state of the system. We say a given formula is satisfiable if its interpretation is non-empty, meaning that there is some nonempty set of $X$ that satisfies it.
+	
+\end{itemize}
+
+
+\subsubsection*{Universality}
+
+Our spadework concluded, we're ready to say what it means for an effective dynamical system to be universal. We will use Delvenne et. al's precise definition here:
+
+``{\it An effective dynamical system is \emph{universal} if there is a recursive family of temporal formulae such that knowing whether a given formula of the family is satisfiable is an r.e.-complete problem.}''
+
+A ``recursive'' family of temporal formulae is a set of temporal formula for which membership in the set can be decided by a turing machine in finite time; this is essentially a regularity condition which prevents the family from being outlandishly defined.
+
+To get a feel for what this definition means, and ensure that it is reasonable, let's start by confirming that the Universal Turing Machine dynamical system  is, as we expected from the start, universal.
+
+A configuration of the Universal Turing Machine, as with all Turing machines, is defined by finite control state and its tape contents, both of which can be encoded in a binary strings. So the configuration space of a UTM is a subset $X$ of $\{0,1\}^\Nn$, and the code for the UTM is some specific transition function on this space, $f$.
 
 \end{document}
