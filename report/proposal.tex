@@ -300,7 +300,12 @@ right on the tape.
 \end{figure}
 At each step of the computation, the Turing machine performs a similar
 process: Read the tape, rewrite and move as dictated by $\delta$, and
-repeat.
+then repeat. If the Turing machine reaches the state $\cmark$, then it
+halts and the input is said to be ``accepted.'' If it reaches
+$\xmark$, the state is ``rejected.'' {\color{blue} In the case that
+  the machine never halts, we treat this as a form of rejection.}
+
+
 
 \section{Computational Universality}
 
