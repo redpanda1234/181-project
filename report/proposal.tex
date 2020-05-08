@@ -229,7 +229,7 @@ A given problem, call it $P$, is complete for a class of problems, $C$, if two c
 
 The question ``Will Turing machine $M$ accept input $w$?'' (call it $Q$) is also r.e.-complete. Recall that our goal was to find a question $QDS$ about a dynamical system, which we could reduce $Q$ to. One way to express this constraint is that $QDS$ should be r.e.-complete: then both $QDS$ and $Q$ could be reduced to each other, so they would be equivalent questions, which is what we are looking for. In fact, we will see that the r.e.-completeness of $QDS$ is exactly what we will require.
 
-\subsubsection*{Spadework Part II - Effectice Symbolic Systems}
+\subsubsection*{Spadework Part II - Effective Symbolic Systems}
 
 A symbolic set can be thought of as a set of words made from a finite alphabet $A$. We could express such a set as $(A \cup \{B\})^\Nn$, meaning the set of one-sided infinite words with characters which are either drawn from $A$ or are the ``blank'' symbol $B$. Finite words would then end be expressed as infinite words ending with an infinite tail of $B$s. But we could encode each element of $A \cup \{B\}$ with a binary sequence (with all encodings the same length), so any symbolic set can be encoded as a subset of the set $\{0,1\}^\Nn$ of one-sided infinite binary words.
 
