@@ -1,0 +1,16 @@
+\documentclass{standalone}
+\usepackage{tikz}
+\begin{document}
+\begin{tikzpicture}
+  \draw[fill=red!30!white!] (0,0) circle (4cm);
+  \node (all) at (0,3.5) {\footnotesize All Languages};
+  \draw[fill=orange!30!white!] (0,0) circle (3.2cm);
+  \node (p0) at (0,2.6) {\footnotesize Recursively Enumerable};
+  \draw[fill=yellow!30!white!] (0,0) circle (2.4cm);
+  \node (p1) at (0,1.8) {\footnotesize Context-Sensitive};
+  \draw[fill=green!30!white!] (0,0) circle (1.6cm);
+  \node (p3) at (0,1) {\footnotesize Context-Free};
+  \draw[fill=blue!30!white!] (0,0) circle (.8cm);
+  \node[align=center] (pn) at (0,0) {\footnotesize Regular};
+\end{tikzpicture}
+\end{document}

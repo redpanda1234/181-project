@@ -1,8 +1,4 @@
-\documentclass{fkpset}
-
-\lhead{F.\ Kobayashi \& M.\ LeMay}
-\chead{}
-\rhead{Math 181 -- Spring, 2020}
+\documentclass{fkpaper}
 
 % Turing machine commands and stuff
 \newcommand{\acceptState}{{\rm Accept}}
@@ -16,6 +12,9 @@
 \newcommand{\ltil}{\mathcal{U}}
 \newcommand{\psc}{\mathcal{P}}
 
+% Regular languages
+\newcommand{\lreg}{\ensuremath{\ms L_{\rm reg}}}
+
 
 % Command for wrapping things with きっこ brackets (requires package
 % kana.sty)
@@ -25,6 +24,10 @@
 \usepackage{kana}
 \newcommand{\np}[1]{\hspace{-.55em}〔#1〕\hspace{-.55em}}
 
+\title{DYNAMICAL SYSTEMS AND COMPUTABILITY THEORY}
+\author{Forest Kobayashi and Matthew LeMay}
+\affiliation{Department of Mathematics, Harvey Mudd College,
+  Claremont, CA, 91711}
 
 
 
@@ -32,57 +35,74 @@
 
 % ----------------------------- Title ----------------------------- %
 
-\begin{center}
-  \vspace{-2.0cm}
-  \scshape \LARGE The Dynamics of Turing Machines
-  \vspace{1.05cm}
-\end{center}
-
-\section{Abstract}
-We propose to study the behavior of Turing Machines in the context of
-dynamical systems. A \emph{Turing Machine} (abbreviated ``TM'') is a
-model of computation involving a \emph{transition function} on a space
-of \emph{configurations}. We think of TMs as beginning with a finite
-\emph{input string} and evolving according to the rules of the
-transition function; TMs can either run forever or halt in one of the
-\emph{accepting} or \emph{rejecting} state.
-% Every TM must have a finite description;
-% however, in the course of executing a computation, we allow the TM to
-% employ an infinite ``work tape.''\footnote{This corresponds to writing
-% a computer program with finitely many characters, but allowing the
-% program to use unbounded RAM in its execution.}
-% , where each configuration represents a
-% particular combination of a \emph{state} and the contents of a
-% \emph{work
-Hence, a TM can be naturally understood as a discrete dynamical system
-with two fixed points. In this context the asymptotic behavior of TMs
-is of great interest in the field of Computability Theory; however,
-the problem has only recently begun being examined from the dynamical
-perspective. For our project we plan to examine the connection between
-these two disciplines, both in terms of how tools from abstract
-dynamical systems can help us interpret the behavior of TMs as well as
-how continuous dynamical systems can be approximated discretely to
-create analog models of computation. Particular topics of focus might
-include studying randomized approximation algorithms using the
-techniques of stability theory or investigating connections between
-the halting problem and limit cycles.
 
 
+\begin{abstract}
+  \textbf{Abstract goes here} Nullam eu ante vel est convallis
+  dignissim. Fusce suscipit, wisi nec facilisis facilisis, est dui
+  fermentum leo, quis tempor ligula erat quis odio. Nunc porta
+  vulputate tellus. Nunc rutrum turpis sed pede. Sed bibendum. Aliquam
+  posuere. Nunc aliquet, augue nec adipiscing interdum, lacus tellus
+  malesuada massa, quis varius mi purus non odio. Pellentesque
+  condimentum, magna ut suscipit hendrerit, ipsum augue ornare nulla,
+  non luctus diam neque sit amet urna. Curabitur vulputate vestibulum
+  lorem. Fusce sagittis, libero non molestie mollis, magna orci
+  ultrices dolor, at vulputate neque nulla lacinia eros. Sed id ligula
+  quis est convallis tempor. Curabitur lacinia pulvinar nibh. Nam a
+  sapien.
+\end{abstract}
+
+
+% We propose to study the behavior of Turing Machines in the context of
+% dynamical systems. A \emph{Turing Machine} (abbreviated ``TM'') is a
+% model of computation involving a \emph{transition function} on a space
+% of \emph{configurations}. We think of TMs as beginning with a finite
+% \emph{input string} and evolving according to the rules of the
+% transition function; TMs can either run forever or halt in one of the
+% \emph{accepting} or \emph{rejecting} state.
+% % Every TM must have a finite description;
+% % however, in the course of executing a computation, we allow the TM to
+% % employ an infinite ``work tape.''\footnote{This corresponds to writing
+% % a computer program with finitely many characters, but allowing the
+% % program to use unbounded RAM in its execution.}
+% % , where each configuration represents a
+% % particular combination of a \emph{state} and the contents of a
+% % \emph{work
+% Hence, a TM can be naturally understood as a discrete dynamical system
+% with two fixed points. In this context the asymptotic behavior of TMs
+% is of great interest in the field of Computability Theory; however,
+% the problem has only recently begun being examined from the dynamical
+% perspective. For our project we plan to examine the connection between
+% these two disciplines, both in terms of how tools from abstract
+% dynamical systems can help us interpret the behavior of TMs as well as
+% how continuous dynamical systems can be approximated discretely to
+% create analog models of computation. Particular topics of focus might
+% include studying randomized approximation algorithms using the
+% techniques of stability theory or investigating connections between
+% the halting problem and limit cycles.
+
+\begin{multicols}{2}
 \section{Introduction}
-We'll begin by describing some of common pieces of vocabulary used in
-computability theory.
+We'll begin by introducing some of the basic vocabulary used in formal
+language theory. We then discuss the layers of the \emph{Chomsky
+  Hierarchy}, and how the associated models of computation for each
+layer can be viewed as dynamical systems.
+
+
+% We'll begin by describing some of common pieces of vocabulary used in
+% computability theory.
 
 \subsection{Strings and Alphabets}
 First, we give the definitions for \emph{alphabets} and
-\emph{strings}. These will not be terribly important later on, it's
-just helpful to have the vocabulary.
-\begin{definition}[Alphabet]
+\emph{strings}. These form the backdrop for all of our discussions of
+computability theory.
+\begin{definition}[Alphabet]\label{def:alphabet}
   An \emph{alphabet} is a finite set, often denoted by $\Sigma$. The
   elements of $\Sigma$ are called \emph{characters}.
 \end{definition}
 We make no assumptions about the characters in $\Sigma$; they will
 \emph{exclusively} serve as formal symbols for use in strings.
-\begin{definition}[Strings]
+\begin{definition}[Strings]\label{def:strings}
   Let $\Sigma$ be an alphabet. We define an operation $\cdot$ on
   $\Sigma$ as follows: Let $\sigma_1, \sigma_2 \in \Sigma$ be
   arbitrary (not necessarily distinct). Then define a \emph{new}
@@ -103,8 +123,7 @@ We make no assumptions about the characters in $\Sigma$; they will
     \Sigma^\star
     &= \set{\epsilon,\ \np{\sigma_1},\ \ldots,\ \np{\sigma_n},\
       \np{\sigma_1 \sigma_1},\ \ldots,\ \np{\sigma_i\sigma_j},\
-      \ldots,\ \np{\sigma_n\sigma_n},\ \ldots, \np{\sigma_i \sigma_j
-      \sigma_k},\ldots} \\
+      \ldots} \\
     &= \bigcup_{k=0}^\infty \set{\np{\sigma_{i_1}\sigma_{i_2} \cdots
       \sigma_{i_k}} \MID \sigma_{i_j} \in \Sigma}
   \end{align*}
@@ -116,29 +135,32 @@ We make no assumptions about the characters in $\Sigma$; they will
     \item The $\cdot$ operation the \emph{concatenation operation},
       and
     \item The elements of $(\Sigma^\star, \cdot)$ \emph{strings}.
+      \qedhere
   \end{enumerate}
 \end{definition}
 \begin{remark}
   This is the same as defining $(\Sigma^\star, \cdot)$ to be the
-  \emph{free monoid} over $\Sigma$.
+  \emph{free monoid} over $\Sigma$. This isn't a terribly enriching
+  perspective, we just think the word ``monoid'' sounds funny so we
+  wanted to say it.
 \end{remark}
-\begin{definition}[Length of a string]
+\begin{definition}[Length of a string]\label{def:string-length}
   Let $\Sigma$ be an alphabet, and let $\sigma \in \Sigma^\star$.
   Suppose $\sigma$ is of the form
   \[
     \sigma = \sigma_{i_1} \sigma_{i_2} \cdots \sigma_{i_k}
   \]
   where $\sigma_{i_j} \in \Sigma$ for each $j = 1, \ldots,k$. Then we
-  define the \emph{length} of $\sigma$ to be
+  define the \emph{length} of $\sigma$ (denoted $\abs{\sigma}$) to be
   \[
-    \abs{\sigma} = k.
+    \abs{\sigma} = k. \qedhere
   \]
 \end{definition}
 \begin{remark}
   Note, since $\epsilon \not\in\Sigma$, our assumption that each of
   the $\sigma_{i_j}\in \Sigma$ makes the length function well-defined.
 \end{remark}
-\begin{definition}[Language]
+\begin{definition}[Language]\label{def:language}
   Let $\Sigma$ be an alphabet, and let $L \subseteq \Sigma^\star$.
   Then we call $L$ a \emph{language} over $\Sigma$.
 \end{definition}
@@ -151,75 +173,235 @@ extremely simple, such as
   L_{\rm easy} = \set[Big]{\sigma \in \Sigma \MID \abs{\sigma}
     \equiv_2 0},
 \]
-or something fiendishly complex, like
+or something fiendishly complex, like\footnote{Assume that we have
+  some agreed-upon encoding scheme by which we can interpret strings
+  in $\Sigma^\star$ as proofs.}
 \[
   L_{\rm hard} = \set[Big]{\sigma \MID \text{\small $\sigma$ is a
-      base-2 encoding of a valid proof of the Hartman–Grobman
-      theorem.\footnote{Assume that $\Sigma$ has $>2$ characters, and
-        that we have some agreed-upon binary encoding.}}}
+      valid proof of Hartman–Grobman.}}
 \]
 We think of $L_{\rm easy}$ as having a much simpler ``structure'' when
 compared to $L_{\rm hard}$. This is a byproduct of the differences in
-the predicates (the parts after the $\mid$'s) we've use to define our
-sets. In the first, the rule is very simple to state, and very simple
-to verify. We could imagine a program that determines membership in
-$L_{\rm easy}$ simply by scanning left-to-right and flipping a parity
-bit until reaching the end of the string. Then, it simply checks the
-final value of the bit to determine whether the length of the string
-is even or odd. See \cref{fig:illustration-of-process} for an
-illustration.
+the predicates we've use to define our sets. In the first, the rule is
+very simple to state, and very simple to verify. We could imagine a
+program that determines membership in $L_{\rm easy}$ simply by
+scanning left-to-right and flipping a parity bit until reaching the
+end of the string. Then, it would simply checks the final value of the
+bit to determine whether the length of the string was even or odd. See
+\cref{fig:illustration-of-process} for an illustration.
 \begin{figure}[H]
   \centering
   \includegraphics{figures/parity-checker.pdf}
   \caption{An illustration of the process. In each step, gray
     represents characters that've already been read, red symbols
     represent the current character, and blue symbol indicate the
-    value of the parity bit.}
+    value of the parity bit. The final parity is odd, so we reject.}
   \label{fig:illustration-of-process}
 \end{figure}
-% By contrast, it's hard to imagine much of any
 We note that a computer built to execute this algorithm could be very
 simple: it would only need enough memory to store the program and keep
 track of the parity bit, and this would be sufficient to determine
 membership in $L_{\rm easy}$ for arbitrary input.
 
-By contrast, $L_{\rm hard}$ seems a lot harder. Since proofs can be
+By contrast, $L_{\rm hard}$ seems a lot harder. Since the input can be
 made arbitrarily long\footnote{See: this document} while still
-remaining valid,\footnote{See: maybe a different document} we'd need
-to keep track of claims that were made arbitrarily far back in the
-input. E.g., our string might encode a proof that's structured like
-the following:
+remaining valid,\footnote{See: maybe a different document} we need to
+be able to keep track of claims that are made arbitrarily far apart in
+the input string. E.g., suppose we're handed something like the
+following:
 \begin{itemize}
   \item Axioms: $A_0$, $A_1$, \ldots, $A_n$.
   \item Desired result: $Z$.
-  \item Claim: $B$. Proof of claim: $A_0 \land A_1 \implies B_0$. Now,
-    $B_0 \implies B_1$. Also $B_1 \land A_2 \implies $ $\cdots$
-    $\implies B$.
-  \item Claim: $C$. Proof of claim:
+  \item Proof:
     \begin{itemize}
       \item $1 + 1 = 2$
-      \item $2 = 2$
-      \item $1 + 1 = 2$
-      \item \ldots More vacuous filler claims, until finally
-      \item $A_0 \land B \implies C$.
+      % \item $2 = 2$
+      \item $1 + 2 = 3$
+      \item (A bunch of \np{other statements that are true but
+        irrelevant} interspersed randomly with helpful ones, until
+        finally)
+      \item $\ldots \implies Z$.
     \end{itemize}
-  \item Similarly to the above for $D$ through $Y$, until
-  \item $\ldots \implies Z$.
 \end{itemize}
-So it's essentially impossible to create an algorithm that looks
-exclusively at local data to verify whether a given string $\sigma$ is
-an element of $L_{\rm hard}$. This difficulty is made formal by the
-\emph{Chomsky Hierarchy}, which essentially gives an ordering to
-languages based on the complexity of the ``computers'' needed to
-identify their members.\footnote{Technically ``computer'' should be
-  replaced with ``computational model,'' but the distinction isn't
-  important for us today} $L_{\rm easy}$ corresponds to one of the
-simplest possible models, which is known as a \emph{Deterministic
-  Finite Automaton}. By contrast, one of the most powerful models is
-known as a \emph{Turing machine}, which we describe below. All of
-these can be unified into a single conceptual framework by viewing
-them as \emph{dynamical systems}. The reader might consider how as we
-begin with our formal definitions.
+A priori, a verifier program has no knowledge of which claims will be
+relevant later to the proof. Hence, it needs to store all of the ones
+it encounters --- even silly things like $1+1 = 2$. This makes it
+impossible to create an algorithm that looks exclusively at local data
+to verify whether a given string $\sigma \in L_{\rm hard}$. Thus, we
+would need a more sophisticated computer to execute a verifier for
+$L_{\rm hard}$ than we did for $L_{\rm easy}$.
+
+
+This difference is made formal by the \emph{Chomsky Hierarchy}, which
+gives an ordering to languages based on the complexity of the
+``computers'' needed to identify their strings.\footnote{Technically
+  ``computer'' should be replaced with ``computational model,'' but
+  the distinction isn't important for us today} The situation is
+summarized by the following graphic:
+\begin{figure}[H]
+  \centering
+  \includegraphics[scale=.8]{figures/chomsky-hierarchy.pdf}
+  \caption{The Chomsky Hierarchy}
+  \label{fig:chomsky-hierarchy}
+\end{figure}
+$L_{\rm easy}$ is a \emph{regular language}, which corresponds to one
+of the simplest possible models of computation (a \emph{Deterministic
+  Finite Automaton}). By contrast, $L_{\rm hard}$ requires a
+\emph{Turing Machine}, one of the most powerful models of computation.
+All of these can be unified into a single conceptual framework by
+viewing them as \emph{dynamical systems}. The reader might consider
+how as we begin with our formal definitions. But first, a quote from
+Prof.\ Ran:
+\begin{leftbar}
+  ``There's this beautiful onion\ldots and if you cut it open, it will
+  make you cry.''
+
+  {\hfill\itshape -Prof.\ Ran, on the Chomsky Hierarchy}
+\end{leftbar}
+We will strive to ensure that the reader experiences only tears of
+joy.
+
+
+\subsection{Deterministic Finite Automata}
+\emph{Deterministic finite automata} correspond to the innermost ring
+of \cref{fig:chomsky-hierarchy}, the \emph{regular languages}. These
+can be described formally in a number of ways; we'll choose the
+following:
+\begin{definition}[Regular Language]\label{def:regular-language}
+  Let $\Sigma$ be an alphabet. We'll define the set of all
+  \emph{regular languages over $\Sigma$} (denoted $\lreg(\Sigma)$) by
+  an iterative process:
+  \begin{enumerate}
+    \item First, define $\varnothing$ and $\set{\epsilon}$ to be
+      elements of $\lreg(\Sigma)$.
+    \item Next: For all $\sigma \in \Sigma$, define $\set{\sigma}$ to
+      be an element of $\lreg(\Sigma)$.
+    \item Now, for all $L_0$, $L_1 \in \lreg(\Sigma)$, define
+      \begin{itemize}
+        \item $L_0 \cup L_1$, % {\color{red} (note, we allow only finite
+          % unions)}
+        \item $L_0 \cdot L_1 = \set{\ell_0 \ell_1 \MID \ell_0 \in L_0,
+          \ell_1 \in L_1}$, and
+        \item $L_0^\star$, $L_1^\star$
+      \end{itemize}
+      to be elements of $\lreg(\Sigma)$.
+    \item Finally, if $L$ is yielded by a finite sequence of the
+      rules above, then $L \in \lreg(\Sigma)$. \qedhere
+  \end{enumerate}
+\end{definition}
+The idea with regular languages is that they are only slightly more
+complicated than $\Sigma$ itself. Indeed, one might note the
+similarity between the axioms above and those for \cref{def:strings}
+(strings). We'll give a few examples of regular languages before we
+introduce the associated model of computation. To that end, we'll
+first introduce a shorthand that will reappear many times throughout
+this paper.
+\begin{definition}[Exponent notation]
+  Let $\Sigma$ be an alphabet. Then for all $\sigma \in \Sigma$, we
+  interpret the notation $\sigma^n$ by
+  \[
+    \sigma^n = \underbrace{\sigma \cdot \sigma \cdots \sigma}_{n\text{
+      times}} \qedhere
+  \]
+\end{definition}
+In light of the remark about {\color{red} m} {\color{orange} o}
+{\color{yellow} n} {\color{green} o} {\color{blue} i} {\color{purple}
+  d}s made earlier, this notation is actually quite reasonable.
+\begin{example}\label{ex:dfa-example}
+  Let $\Sigma = \set{0,1}$. Then $L$ defined by
+  \[
+    L = \set{0^n 1^m \MID n,m \in \NN}
+  \]
+  is a regular language. This follows from the fact that we can write
+  $L$ as $L = \set{0}^\star \cdot \set{1}^\star$.
+\end{example}
+\begin{example}
+  Let $\Sigma$ be an arbitrary alphabet. Then all finite sets $L
+  \subseteq \Sigma$ are regular. This follows from the fact that for
+  any $\sigma\in L$, if $\sigma$ decomposes as
+  \[
+    \sigma = \sigma_{i_1} \sigma_{i_2} \cdots \sigma_{i_k},
+  \]
+  Then we can state this equivalently as
+  \[
+    \set{\sigma} = \set{\sigma_{i_1}} \cdot \set{\sigma_{i_2}} \cdots
+    \set{\sigma_{i_k}},
+  \]
+  from which it follows that $\set{\sigma}$ is regular. Finally, this
+  gives us that
+  \[
+    L = \bigcup_{\sigma \in L} \set{\sigma}
+  \]
+  is a regular language.
+\end{example}
+\begin{example}
+  Let $\Sigma = \set{0,1}$. Then $L$ given by $L = \set{(01)^n \MID n
+    \in \NN}$ is regular.
+\end{example}
+As stated earlier, \emph{regular languages} are tied to
+\emph{Deterministic Finite Automata}. These will lead to a more
+dynamical systems-esque view of regular languages.
+\begin{definition}[Deterministic Finite Automata]
+  A \emph{deterministic finite automata} is a 5-tuple
+  \[
+    M = (Q, F, \Sigma, \delta, q_0)
+  \]
+  such that the following hold:
+  \begin{enumerate}
+    \item $Q$, $\Sigma$, $F$ are finite sets. We choose the following
+      naming conventions:
+      \begin{enumerate}[label=\roman*)]
+        \item $Q$ is called the \emph{set of states} for $M$,
+        \item $F$ is called the set of \emph{accepting} states for
+          $M$, and
+        \item $\Sigma$ is called the \emph{input alphabet} for $M$;
+      \end{enumerate}
+    \item $\delta$ is a function $\delta : Q \times \Sigma \to Q$ (we
+      call $\delta$ the \emph{transition function}), and
+    \item $q_0 \in Q$ is a distinguished element that we call the
+      \emph{start state}. \qedhere
+  \end{enumerate}
+\end{definition}
+We imagine $M$ performing a computation as follows: Suppose we're
+given an input string $\sigma = \sigma_{i_1} \sigma_{i_2} \ldots
+\sigma_{i_k}$. $M$ initializes in the \emph{start state} $q_0$, and
+reads the first character. $M$ then changes state to $q_{j_1} =
+\delta(q_0, \sigma_{i_1})$, and reads the next character
+$\sigma_{i_2}$. $M$ then transitions to state $q_{j_2} =
+\delta(q_{j_1}, \sigma_{i_2})$, and so on. Once $M$ has exhausted the
+input, it halts computation. If it halts in an \emph{accepting state}
+(i.e.\ $q_{\rm final} \in F$), then we say $M$ accepts the input;
+else, we say $M$ rejects it.
+
+It's common to visualize DFAs through diagrams like the following:
+\begin{figure}[H]
+  \centering
+  \includegraphics[scale=1.2]{figures/dfa-example.pdf}
+  \caption{A DFA for \cref{ex:dfa-example}.}
+\end{figure}
+The common convention is that circles represent states of $Q$; the
+arrows represent the transitions given by $\delta(q, \sigma)$ (where
+$\sigma$ is the label above the arrow), and double-circled states
+represent elements of $F$.
+
+
+
+
+\subsection{}
+
+
+
+
+
+
+
+
+% {\color{blue} helkjjjjsdf;af}
+
+
+
+
+
 
 \subsection{Turing Machines}
 A \emph{Turing machine} (often TM for short) is an abstract model of
@@ -263,7 +445,7 @@ dynamical-systems-flavored version for later.
           --- in general we do not require $\delta$ to be defined on
           all of $(Q \setminus F) \times \Gamma$.
         \item $L, R$ are understood as ``shift'' directions, as
-          explained below.
+          explained below. \qedhere
       \end{enumerate}
   \end{enumerate}
 \end{definition}
@@ -283,7 +465,7 @@ $\uparrow$ in the below) on $\sigma_1$. We think of the tape head as
 ``pointing'' to whatever character the TM is reading currently.
 \begin{figure}[H]
   \centering
-  \includegraphics{figures/tm-initial-input.pdf}
+  \includegraphics[scale=.7]{figures/tm-initial-input.pdf}
   \caption{Turing machine initialized with the input string $\sigma_1
     \sigma_2 \sigma_3 \sigma_4 \sigma_5$.}
 \end{figure}
@@ -458,5 +640,5 @@ A ``recursive'' family of temporal formulae is a set of temporal formula for whi
 To get a feel for what this definition means, and ensure that it is reasonable, let's start by confirming that the Universal Turing Machine dynamical system  is, as we expected from the start, universal.
 
 A configuration of the Universal Turing Machine, as with all Turing machines, is defined by finite control state and its tape contents, both of which can be encoded in a binary strings. So the configuration space of a UTM is a subset $X$ of $\{0,1\}^\Nn$, and the code for the UTM is some specific transition function on this space, $f$.
-
+\end{multicols}
 \end{document}

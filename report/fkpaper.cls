@@ -82,10 +82,11 @@
 % Problem and reading set lists, for top of document
 \RequirePackage{etoolbox}
 
-%% COVERSHEET PACKAGES
-\RequirePackage{ifthen}
-\RequirePackage{array}
-\RequirePackage{stackengine}
+% Make links clickable and colored
+\RequirePackage[colorlinks=true]{hyperref}
+
+% More intelligent cross-referencing
+\RequirePackage[capitalize]{cleveref}
 
 \NeedsTeXFormat{LaTeX2e}
 
@@ -100,11 +101,11 @@
 
 % them appropriately sized, and what have you.
 \titleformat{\section}
-  {\large\scshape\filcenter}{\scshape\thesection.}{.5em}{}
+  {\large\bfseries\filcenter}{\scshape\thesection.}{.5em}{}
 \titleformat{\subsection}
-  {\scshape\filcenter}{\scshape\thesubsection.}{.5em}{}
+  {\bfseries\filcenter}{\bfseries\thesubsection.}{.5em}{}
 \titleformat{\subsubsection}
-  {\scshape\filcenter}{\scshape\thesubsubsection.}{.5em}{}
+  {\scshape\filcenter}{\bfseries\thesubsubsection.}{.5em}{}
 
 % % Ha-ha-ha-ha, harrrr-a-ha-ha-ha-hA, ha-HA, ha-HA...
 % \titlespacing{\section}{0pt}{10pt plus 4pt minus 2pt}{-5pt plus 2pt
@@ -126,7 +127,7 @@
 
 
 % Change enumerate item spacing, and declare default enumerate label.
-\setlist[enumerate]{itemsep=4pt, parsep=0pt, label=$($\alph*$)$}
+\setlist[enumerate]{itemsep=4pt, parsep=0pt, label=\arabic*)}
 
 % block quote environment
 \AtBeginEnvironment{quote}{\small}
@@ -209,7 +210,7 @@
     {0em}                       % Space below
     {\itshape}                   % Body font
     {}                           % Indent amount
-    {\scshape}                   % Theorem head font
+    {\bfseries}                   % Theorem head font
     {.}                          % Punctuation after theorem head
     {.5em}                       % Space after theorem head
     {}  % Theorem head spec (can be left empty, meaning ‘normal’)
@@ -222,19 +223,22 @@
 \newtheorem{corollaryx}{Corollary}[theoremx] % Reset counter w new thm
 \newtheorem{lemmax}[theoremx]{Lemma} % Same counter as thm
 
-% End with a hollow triangle, to visualy separate from text. Add
+
+
+
+% End with a hollow lozenge, to visualy separate from text. Add
 % \qedhere, which can be used to control where the qed gets placed,
 % avoiding unnecessary line breaks and hfills.
 \newenvironment{theorem}
-  {\pushQED{\oldqed}\renewcommand{\qedsymbol}{$\triangle$}\theoremx}
+  {\pushQED{\oldqed}\renewcommand{\qedsymbol}{$\lozenge$}\theoremx}
   {\popQED\endtheoremx}
 
 \newenvironment{corollary}
-  {\pushQED{\oldqed}\renewcommand{\qedsymbol}{$\triangle$}\corollaryx}
+  {\pushQED{\oldqed}\renewcommand{\qedsymbol}{$\lozenge$}\corollaryx}
   {\popQED\endcorollaryx}
 
 \newenvironment{lemma}
-  {\pushQED{\oldqed}\renewcommand{\qedsymbol}{$\triangle$}\lemmax}
+  {\pushQED{\oldqed}\renewcommand{\qedsymbol}{$\lozenge$}\lemmax}
   {\popQED\endlemmax}
 
 % And so on with definitions!
@@ -243,7 +247,7 @@
     {0em}                           % Space below
     {\rmfamily}                     % Body font
     {}                              % Indent amount
-    {\scshape}                      % Theorem head font
+    {\bfseries}                      % Theorem head font
     {.}                             % Punctuation after theorem head
     {.5em}                          % Space after theorem head
     {}  % Theorem head spec (can be left empty, meaning ‘normal’)
@@ -251,15 +255,24 @@
 \theoremstyle{snazzydefinition}
 
 \newtheorem{definitionx}{Definition}[section]
-\newtheorem{examplex}{Example}[definitionx]
+\newtheorem{example}{Example}[section]
 
-\newenvironment{example}
-  {\pushQED{\oldqed}\renewcommand{\qedsymbol}{$\triangle$}\examplex}
-  {\popQED\endexamplex}
+% Don't number remarks
+\newtheorem*{remark}{Remark}
+
+% \newenvironment{example}
+%   {\pushQED{\oldqed}\renewcommand{\qedsymbol}{$\lozenge$}\examplex}
+%   {\popQED\endexamplex}
 
 \newenvironment{definition}
-  {\pushQED{\oldqed}\renewcommand{\qedsymbol}{$\triangle$}\definitionx}
+  {\pushQED{\oldqed}\renewcommand{\qedsymbol}{$\lozenge$}\definitionx}
 {\popQED\enddefinitionx}
+
+% \newenvironment{remark}
+%   {\pushQED{\oldqed}\renewcommand{\qedsymbol}{$\lozenge$}\remarkx}
+% {\popQED\endremarkx}
+
+
 
 \DeclareOption*{\PassOptionsToClass{\CurrentOption}{article}}
 \ProcessOptions\relax
