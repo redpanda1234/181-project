@@ -1,0 +1,14 @@
+\documentclass{standalone}
+\usepackage{tikz}
+\usepackage{pgfplots}
+\begin{document}
+\begin{tikzpicture}
+  \pgfdeclareimage{2dproj}{cylinder-2d-proj.pdf}
+
+  \node () at (-.5,0) {\pgfuseimage{2dproj}};
+
+  \draw[|-latex] (1.25,0) -- (2.75, 0) node[midway, above] {$\pi_i^{-1}$};
+  \pgfdeclareimage{cylinder}{cylinder-set-example.pdf}
+  \node () at (4, 0) {\pgfuseimage{cylinder}};
+\end{tikzpicture}
+\end{document}

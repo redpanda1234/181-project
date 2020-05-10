@@ -474,7 +474,8 @@
 
 % Put the qed box all the way to the right
 \let\oldqed\qed
-\renewcommand{\qed}{\hfill $\blacksquare$}
+\renewcommand{\qedsymbol}{$\blacksquare$}
+\renewcommand{\qed}{\hfill \qedsymbol}
 
 % For confirming or denying various statements (useful when you're
 % doing casework in a proof and want to have some visual separator)

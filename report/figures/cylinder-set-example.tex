@@ -1,0 +1,49 @@
+\documentclass[border=1pt]{standalone}
+\usepackage{tikz}
+\usepackage{tikz-3dplot}
+
+
+\begin{document}
+\tdplotsetmaincoords{60}{120}
+\begin{tikzpicture}[tdplot_main_coords, scale=.5]
+
+
+  \pgfmathsetmacro{\zshift}{6}
+  \pgfmathsetmacro{\omega}{180}
+
+  \tikzset{declare
+    function={myr(\z)=sin(\omega*\z)*cos(2*\omega*\z)*sin(\omega*\z+.5)+2+(sin(4*\z*\omega))^2;}
+  }
+
+  \tikzset{declare function={myx(\z)=cos(\z*\omega)*myr(\z);}}
+  \tikzset{declare function={myy(\z)=(sin(\z*\omega)*myr(\z);}}
+  \tikzset{declare
+    function={myz(\z)=% .75*sin(\z*180)*cos(200*\z-2)
+      - \zshift;}}
+
+  \pgfmathsetmacro{\zmax}{2}
+  \pgfmathsetmacro{\shadegap}{.0025}
+  \pgfmathsetmacro{\othergap}{0.01}
+
+  \foreach \z in {0,\shadegap,...,\zmax}{
+    \filldraw[blue!30!white,opacity=0.1]
+    ({myx(\z)},{myy(\z)},0) --
+    ({myx(\z)},{myy(\z)},{myz(\z)}) --
+    ({myx(\z+\shadegap)},{myy(\z+\shadegap)},{myz(\z+\shadegap)}) --
+    ({myx(\z+\shadegap)},{myy(\z+\shadegap)},0) -- cycle;
+  }
+
+  \draw[densely dashed, very thin] ({myx(0)}, {myy(0)}, {myz(0)})
+  \foreach \z in {0,\othergap,...,\zmax}{
+    -- ({myx(\z)},{myy(\z)},{myz(\z)})
+  };
+
+
+
+  \draw[densely dashed, very thin] ({myx(0)},{myy(0)},{0})
+  \foreach \z in {0,\othergap,...,\zmax}{
+    -- ({myx(\z)},{myy(\z)},{0})
+  };
+\end{tikzpicture}
+
+\end{document}

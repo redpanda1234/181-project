@@ -394,19 +394,14 @@ will not give a proof today since our interests are mainly in
 describing automata by dynamical systems. We now proceed in building
 this up formally.
 
-\subsection{Subshifts of finite type}
+\subsection{Putting a Topology on our Strings}
 We want to convert our DFAs into dynamical systems. To that end, we
-first convert our \emph{alphabets} into structures we can interpret in
-terms of space. {\color{blue} This will be helpful in making our
-  theories ``meet in the middle'' in some sense: We want to be able to
-  think about our models of computation as dynamical systems on some
-  phase space; later, we'll want to go the other way. In any case, the
-  correspondence is useful.
-  % Later, we will want
-  % to analyze how dynamical systems can be interpreted as analog models
-  % for computation; here, we want to understand how models for
-  % computation can be understood in terms of dynamical systems
-}
+first convert our \emph{alphabets} and their \emph{strings} into
+structures we can interpret in terms of space. {\color{blue} This will
+  be helpful in making our theories ``meet in the middle'' in some
+  sense: We want to be able to think about our models of computation
+  as dynamical systems on some phase space; later, we'll want to go
+  the other way. In any case, the correspondence is useful. }
 
 To motivate our definitions, let's first think about what we expect
 things to look like from the dynamical viewpoint. Time is easy enough;
@@ -464,43 +459,324 @@ our definition of Turing machines\footnote{We'll repeat the definition
 We'll then define \emph{DFA configurations} as a particular restricted
 subset of these unrestricted configurations.
 \begin{definition}[Unrestricted Configuration]
-  Given a DFA with states $Q$ and input alphabet $\Sigma$, define the
-  space of \emph{unrestricted configurations over $Q, \Sigma$} to be
+  Given a state set $Q$ and input alphabet $\Sigma$, define the space
+  of \emph{unrestricted configurations over $Q, \Sigma$} to be
   \[
-    X = Q \times \pn{\prod_{i=1}^\infty \Sigma \cup \set{\epsilon}},
+    X_{\rm unrest} = Q \times \pn{\prod_{i\in \ZZ} \Sigma \cup
+      \set{\epsilon}},
   \]
   where the $\prod$ is understood as a cartesian product.
 \end{definition}
 \begin{definition}[DFA Configuration]
-  Let $X_{\rm DFA}\subseteq X$ be defined by
+  In an abuse of notation, let $\epsilon_{-\infty}^0 =
+  \prod_{i=-\infty}^0$ (where the ``multiplication'' operation in
+  $\prod$ is understood to be concatenation). Similarly, let
+  $\epsilon_{n+1}^\infty = \prod_{i=+1}^\infty \epsilon$. Then we
+  define $X_{\rm DFA}\subseteq X$ by
   \[
-    X_{\rm DFA} = \set{(q, \sigma) \in X \MID \sigma = \np{\sigma_1
-      \sigma_2 \cdots \sigma_n} \cdot \epsilon^\infty }.
+    X_{\rm DFA} = \set{(q, \sigma) \in X \MID \sigma =
+      \pn{\epsilon_{-\infty}^0 \cdot \np{\sigma_1 \sigma_2 \cdots
+          \sigma_n} \cdot \epsilon_{n+1}^\infty}},
   \]
-  That is, pairs of states $q$ and finite strings $\sigma$ over
-  $\Sigma$.
+  where $n \in \NN$ is understood to be arbitrary.
 \end{definition}
-This ``configuration space'' turns out to be the correct choice of
-phase space. We now seek to define a \emph{topology} on $X$, which
-will in turn induce a topology on $X_{\rm DFA}$. This will give us the
-necessary framework by which to translate back and forth between
-dynamical systems and computability later on. First, recall the
-definition of a topology:
+Recalling that $\epsilon$ is the empty string, we see that $X_{\rm
+  DFA}$ is comprised of pairs of states $q$ and finite strings
+$\sigma$ over $\Sigma$ such that each string is indexed starting from
+$0$. We will not need the negative indices until we discus Turing
+machines.
+
+In any case, this ``configuration space'' turns out to be the correct
+choice of phase space. We now seek to define a \emph{topology} on
+$X_{\rm unrest}$, which will in turn induce a topology on $X_{\rm
+  DFA}$ (if the reader is not familiar with topology, we've included a
+few definitions in the appendix). This will give us natural way to
+translate back and forth between dynamical systems and computability.
+To do so, we will begin by endowing our building block sets $\Sigma
+\cup \set{\epsilon}$ with a topology, and then describing how to
+preserve this structure sensibly when we glue infinitely-many of them
+together.
+\begin{definition}[Discrete Topology]
+  Let $X$ be an arbitrary set. Define the \emph{discrete} topology
+  $\ms T_{\rm discrete}$ on $X$ by letting every $U \subseteq X$ be an
+  open set.
+\end{definition}
+The intuition for the \emph{discrete topology} is that it can be
+realized by a metric defined by
+\[
+  d(x_i, x_j) =
+  \begin{cases}
+    c_{ij} & x_i \neq x_j \\
+    0 & x_i = x_j
+  \end{cases}
+\]
+where each $c_{ij} > 0$. In the following, we will always think of
+$\Sigma \cup \set{\epsilon}$ as being endowed with the discrete
+topology.
+\begin{proposition}\label{prop:basis-for-strings}
+  Consider $\Sigma \cup \set{\epsilon}$ with the discrete topology.
+  Then the set of all singletons $\ms B = \set{\set{\varepsilon},
+    \set{\sigma_1}, \set{\sigma_2}, \ldots, \set{\sigma_n}}$ forms a
+  \emph{base} for $\Sigma \cup \set{\varepsilon}$.
+\end{proposition}
+
+\begin{definition}[Product Topology]
+  For all $i \in I$, let $(X_i, \ms T_i)$ be a topological space. Let
+  $X = \prod_{i \in I} X_i$. We define the \emph{product topology}
+  $\ms T_{\rm prod}$ on $X$ as follows: For all $i \in I$, let $\pi_i
+  : X \to X_i$ be the canonical projection map. Then for all open $U_i
+  \subseteq X_i$, let
+  \[
+    \pi_i^{-1}(U_i) \in \ms T_{\rm prod}.
+  \]
+  We call these $\pi_i^{-1}(U_i)$ \emph{open cylinders}. Anyways: Add
+  all of the sets generated by taking arbitrary unions or finite
+  intersections of the open cylinders to $\ms T_{\rm prod}$. Then we
+  call $\ms T_{\rm prod}$ the \emph{product} topology. \qedhere
+\end{definition}
+See \cref{fig:cylinder-set} for an example of an open cylinder in
+$\RR^3 = \RR \times \RR^2$.
+
+Note, the definition above abstracts on the idea that in \emph{finite}
+product spaces, the projection maps $\pi_i : X \to X_i$ are
+continuous, and hence preserve open sets under inverse images. This
+turns out to yield a more natural topology on the product space than
+we'd have if we'd defined a topology by ``products of open sets are
+open in the product set.''
+
+\begin{figure}[H]
+  \centering
+  \includegraphics{figures/cylinder-set-pullback-example.pdf}
+  \caption{Example partial view of a cylinder set pulled from $\RR^2$
+    into $\RR^3$}
+  \label{fig:cylinder-set}
+\end{figure}
+
+ % The following proposition is true for
+% countable products of discrete spaces.
+Product topologies can be hard to think about, so we'll try to
+compartmentalize the results we want into little bite-sized steps. We
+begin with a proposition that's essentially definitional, but might be
+helpful as a stepping stone in building comfort. The idea is that for
+a product of discrete spaces, singleton cylinders give us essentially
+all we need to characterize openness.
+\begin{proposition}\label{prop:singleton-cylinder}
+  For all $k \in \ZZ$, let $(X_k, \ms T_k)$ be discrete topological
+  spaces. Define $X = \prod_{k\in\ZZ} X_k$, and endow $X$ with the
+  product topology. Fix a particular $i \in \ZZ$, and let $U_i \in\ms
+  T_i$. Then for all $\sigma_j \in U_i$, $\pi_i^{-1}(\set{\sigma_j})$
+  is open in $\ms T_{\rm prod}$, and $\pi_i^{-1}(U_i)$ can be written
+  as
+  \[
+    \pi_i^{-1}(U_i) = \bigcup_{\sigma_j \in U_i}
+    \pi_i^{-1}(\set{\sigma_j}). \qedhere
+  \]
+\end{proposition}
+\begin{sproof}
+  Note that since $X_i$ has the discrete topology, for all $\sigma_j
+  \in U_j$, $\set{\sigma_j} \in \ms T_j$. Thus
+  $\pi_i^{-1}(\set{\sigma_j})$ is an open cylinder, and hence open (by
+  definition of $\ms T_{\rm prod}$). The union part follows
+  immediately by definition; let's write it out explicitly. The
+  important part is highlighted in {\color{blue} blue}. By definition,
+  \begin{align*}
+    \pi_i^{-1}(U_i)
+    &= \pn{\prod_{k = -\infty}^{i-1} X_k} \times {\color{blue} U_i}
+      \times \pn{\prod_{k=i+1}^\infty X_k} \\
+    &= \pn{\prod_{k = -\infty}^{i-1} X_k} \times {\color{blue}
+      \bigcup_{\sigma_j \in U_i} \set{\sigma_j}} \times
+      \pn{\prod_{k=i+1}^\infty X_k} \\
+    &= {\color{blue} \bigcup_{\sigma_j \in U_i}} \pn{\prod_{k =
+      -\infty}^{i-1} X_k} \times {\color{blue} \set{\sigma_j}} \times
+      \pn{\prod_{k=i+1}^\infty X_k} \\
+    &= {\color{blue} \bigcup_{\sigma_j \in U_i}}
+      \pi_i^{-1}({\color{blue} \set{\sigma_j}}),
+  \end{align*}
+  as desired. \qedhere
+\end{sproof}
+Now, we observe that it's not generally true that the product of
+discrete spaces is discrete under the product topology. Indeed, we
+actually only get discrete-like behavior when we look at subsets of a
+particular form. We'll prove this over a series of claims in the
+below. First, we prove a general result for product spaces.
+\begin{proposition}\label{prop:openness-in-products}
+  For all $k \in \ZZ$, let $(X_k, \ms T_k)$ be topological spaces. Let
+  $X = \prod_{k \in \ZZ} X_k$. Then $U \subseteq X$ is open iff $U$ is
+  of the form $\prod_{k \in \ZZ} U_k$, where only finitely-many of the
+  $U_k \neq X_k$.
+\end{proposition}
+\begin{sproof}
+  Since $U$ is open, then by definition of $\ms T_{\rm prod}$, $U$ can
+  be expressed as an arbitrary union of \np{intersections of open
+    cylinders} (in the following, let $V_{j_\ell} \subseteq X_{j_\ell}$):
+  \[
+    A = \bigcup_{i \in I} \bigcap_{j_\ell = j_1}^{j_{k_i}}
+    \pi_{j_\ell}^{-1}(V_{j_\ell}).
+  \]
+  The extra $\ell$ subscript on the $j_\ell$ index is just meant to encode
+  that for different $i$'s, we could be picking different families of
+  $U_j$'s to use in the intersection.\footnote{E.g., for $i = 1$, we
+    might pick $j \in \set{1, 3, 5, \ldots, 21}$, whereas for $i = 2$,
+    we might have $j \in \set{2, 3, 5, 7, 13, \ldots, 23}$, or
+    something.} For each $i \in I$, let
+  \[
+    j_{i, {\rm max}} = \max_{j_\ell = j_1, \ldots, j_{k_i}} \set{j_\ell}.
+  \]
+  And similarly for $j_{i, {\rm min}}$. Then observe that for all $i$,
+  for all $k > j_{i, {\rm max}}$ or $k < j_{i, {\rm max}}$, we have
+  \[
+    \pi_{k} \pn{\bigcap_{j_\ell = j_1}^{j_{k_i}}
+      \pi_{j_\ell}^{-1}(V_{j_\ell})} = X_{k}.
+  \]
+  Hence, it's only possible for $U_k \neq X_k$ for $n \leq j_{i, {\rm
+      max}}$, which represents finitely-many of the $U_n$.
+\end{sproof}
+\begin{proposition}\label{prop:clopen-discrete}
+  With all variables quantified as above, if each of the $X_k$'s have
+  the discrete topology, then one can replace ``open'' with
+  ``clopen.''
+\end{proposition}
+Before proving this, we should first remind ourselves of how set
+complement behaves over cartesian products. Given sets $A,B$, and
+subsets $S \subseteq A$, $T \subseteq B$, then we have
+\[
+  (S \times T)^c = (S^c \times T^c) \cup (S^c \times T) \cup (S
+  \times T^c),
+\]
+and \textbf{\emph{NOT}}
+\[
+  (S \times T)^c = S^c \times T^c. \quad {\color{red} \xmark \text{
+      no!}}
+\]
+In particular, when $T = B$, we have
+\[
+  (S \times B)^c = S^c \times B. \qedhere
+\]
+\begin{sproof}
+  In light of the note above, it suffices to show that if each of the
+  $X_k$'s are given the discrete topology, then the complement of an
+  open cylinder $\pi_i^{-1}(U_i)$ is an open cylinder. This follows
+  directly from applying \cref{prop:singleton-cylinder} to $U_i^c$.
+\end{sproof}
+We have one final proposition, which the reader should think of in
+terms of the context of $X_{\rm unrest}$.
+\begin{proposition}\label{prop:prefix-basis}
+  For all $k \in \ZZ$, let $(X_k, \ms T_k)$ be discrete topological
+  spaces. Define $X = \prod_{k\in\ZZ} X_k$. For each $k \in \ZZ$, and
+  for each $i \in \set{1, \ldots, k}$, define $x_i \in X_i$. Then the
+  collection $\ms B$ given by
+  \[
+    \ms B = \bigcup_{k \in \ZZ} \bigcup_{x_i \in X_i} \pn{\set{x_{1}}
+      \times \cdots \times \set{x_{k}} \times \prod_{i=k+1}^\infty
+      X_i}
+  \]
+  defines a topological base for $\ms T_{\rm prod}$.
+\end{proposition}
+\begin{sproof}
+  First, note that
+  \[
+    X = \bigcup_{B \in \ms B} B,
+  \]
+  hence $\ms B$ satisfies the covering axiom for a base. Now, let
+  $B_1, B_2 \in \ms B$ be arbitrarily chosen. Write these as
+  {\color{blue} Need to come back and update indexing scheme now that
+    we're using $k \in \ZZ$}
+  \begin{align*}
+    B_1
+    &= \set{x_{1,1}} \times \set{x_{1,2}} \times \cdots \times
+      \set{x_{1,\ell_1}} \times \prod_{i=\ell_1+1}^\infty X_i \\
+    B_2
+    &= \set{x_{2,1} } \times \set{x_{2,2}} \times \cdots \times
+      \set{x_{2,k_2}} \times \prod_{i=k_2+1}^\infty X_i
+  \end{align*}
+  We have two cases.
+  \begin{enumerate}
+    \item Suppose that there exists $\ell \in \set{1, \ldots,
+      \min\set{k_1, k_2}}$ with $x_{1,\ell} \neq x_{2,\ell}$. Then
+      $B_1 \cap B_2 = \varnothing$. Thus in this case, the
+      ``intersection stuff'' axiom for a base (see \cref{def:base}) is
+      satisfied vacuously. \cmark
+    \item Suppose that no such $k$ exists. Then without loss of
+      generality, suppose that the $x_{1,i}$ form a prefix of the
+      $x_{2,j}$'s (in the sense that for all {\color{blue} reindex!}
+      $k = 1, \ldots, n_1$, $x_{1,k} = x_{2,k}$). Then $B_1 \cap B_2 =
+      B_1$, which is an element of $\ms B$. \cmark
+  \end{enumerate}
+  In either case, we see that the second axiom for a basis
+  (``intersection stuff'') is satisfied. It follows that $\ms B$
+  generates $\ms T_{\rm prod}$.
+\end{sproof}
+\begin{proposition}\label{prop:product-metrizable} {\color{blue}
+    reindex me!}
+  For each $n \in \NN$, let $(X_k, \ms T_k)$ be a discrete topological
+  space. Then $X = \prod_{n\in\NN} X_k$ is metrizable, with metric
+  given by
+  \[
+    d(\pn{x_i}_{i \in \NN}, \pn{x_j}_{j \in \NN}) =
+    \begin{cases}
+      0 & \pn{x_i}_{i \in \NN} = \pn{x_j}_{j \in \NN} \\
+      2^{-k} & k \textnormal{ first index s.t.\ } x_k \neq x_k
+    \end{cases}
+  \]
+\end{proposition}
+\begin{sproof}
+  Note that the open balls in this metric yield the exact same base as
+  in \cref{prop:prefix-basis}.
+\end{sproof}
+
+OK! \emph{Finally} we can summarize all of this in terms of what it
+means for our actual set of interest, $X_{\rm unrest}$. The upshot is
+as follows.
+\begin{itemize}
+  \item The elements of $X_{\rm unrest}$ are pairs $(q, \sigma)$ where
+    $\sigma$ is an infinite sequence of characters from $\Sigma \cup
+    \set{\epsilon}$.
+  \item \emph{Open balls} in $X_{\rm unrest}$ are sets of sequences
+    that share a prefix of some length.
+  \item The open balls defined above are actually \emph{clopen}.
+  \item \emph{Open sets} in $X_{\rm unrest}$ are arbitrary unions
+    and/or finite intersections of the open balls above.
+  \item In any case, we can think of the \emph{union} operation for
+    our open sets as upping the number of valid options for the
+    $i$\textsuperscript{th} term in some sequence, while the
+    \emph{intersection} operation restricts the choices.
+  \item
+\end{itemize}
+
+
+\subsection{Finally! Converting to a Dynamical System}
 
 
 
+% Note, in the case $I$ is countable and all of our $X_i$'s have the
+% discrete topology, the product topology is metrizable by
+% \[
+%   d(\pn{x_i}_{i=1}^\infty, \pn{y_i}_{i=1}^\infty)
+%   =
+%   \begin{cases}
+%     0 & \text{if for all $i$, } x_i = y_i, \\
+%     2^{-k} & \text{$k$ is first index s.t. } x_k \neq
+%     y_k.
+%   \end{cases}
+% \]
+% This is the case with our set of \emph{unrestricted configurations}
+% $X$. From here on, assume $X$ has been endowed with this topology.
 
-To avoid confusion we'll refer to $q_i$ as
-the \emph{machine state} from now on.
 
-
-
-
-
-% {\color{blue} helkjjjjsdf;af}
-
-
-
+% \begin{proposition}
+%   In the product topology on $X$, our cylinder sets are of the form
+%   \begin{align*}
+%     \pi^{-1}_i(\set{\sigma_1, \ldots, \sigma_k})
+%     &= \{
+%       \pn{x_1, x_2, \ldots, x_{i-1}, {\color{red}\sigma_1}, x_{i+1},
+%       \ldots} \\
+%     &= \phantom{\{} \pn{x_1, x_2, \ldots, x_{i-1},
+%       {\color{red}\sigma_2}, x_{i+1}, \ldots} \\
+%     &= \hspace{8em} \vdots \\
+%     &= \phantom{\{} \pn{x_1, x_2, \ldots, x_{i-1},
+%       {\color{red}\sigma_k}, x_{i+1}, \ldots}\}
+%   \end{align*}
+% \end{proposition}
 
 
 
@@ -837,10 +1113,54 @@ are the ``same.''
     Let $X$ be a set. Then we define the \emph{discrete topology} on
     $X$ to be the powerset:
     \[
-      \ms T_{\rm discrete} = \set{U \MID U \subseteq X}.
+      \ms T_{\rm discrete} = \set{U \MID U \subseteq X}. \qedhere
     \]
   \end{definition}
   In the discrete topology, every set is open.
+  \begin{proposition}
+    The discrete topology on a set $X$ is metrizable. One metric
+    yielding $\ms T_{\rm discrete}$ is
+    \[
+      d(x_0, x_1) =
+      \begin{cases}
+        0 & x_0 = x_1 \\
+        1 & x_0 \neq x_1.
+      \end{cases} \qedhere
+    \]
+  \end{proposition}
+  \begin{definition}[Base]\label{def:base}
+    Let $(X, \ms T)$ be a topological space. Let $\ms B \subseteq \ms
+    T$ such that
+    \begin{enumerate}
+      \item (Covering): We have
+        \[
+        \bigcup_{B \in \ms B} B = X,
+        \]
+        and
+      \item (Intersection stuff): For all $B_1, B_2 \in \ms B$ and
+        for all $x \in B_1 \cap B_2$, there exists $B_3 \in \ms B$
+        such that $x \in B_3$ and
+        \[
+        B_3 \subseteq B_1 \cap B_2.
+        \]
+      \item (Generation by union): For all $U \in \ms T$, there exists
+        $\ms B' \subseteq \ms B$ such that
+        \[
+        \bigcup_{B \in \ms B'} B = U.
+        \]
+    \end{enumerate}
+    Then we call $\ms B$ a \emph{base} or \emph{basis} for the
+    topology $\ms T$.
+  \end{definition}
+  These properties should be reminiscent of open balls in $\RR^n$.
+  Note that open balls (1) cover $\RR^n$, and (2) satisfy the
+  ``intersection stuff'' property --- namely, although the
+  intersection of two open balls $B_1, B_2$ is generally not another
+  open ball, for each $x \in B_1 \cap B_2$, we can find a \emph{third}
+  open ball $B_3$ such that $x \in B_3 \subseteq B_1 \cap B_2$. A base
+  is meant to extend this idea to general topologies.
+
+
 \end{multicols}
 
 

@@ -1,0 +1,24 @@
+\documentclass{standalone}
+\usepackage{tikz}
+\usepackage{pgfplots}
+\begin{document}
+\begin{tikzpicture}[scale=.5]
+
+  \pgfmathsetmacro{\zshift}{10}
+  \pgfmathsetmacro{\omega}{180}
+  \tikzset{declare
+    function={myr(\z)=sin(\omega*\z)*cos(2*\omega*\z)*sin(\omega*\z+.5)+2+(sin(4*\z*\omega))^2;}
+  }
+  \tikzset{declare function={myx(\z)=cos(\z*\omega)*myr(\z);}}
+  \tikzset{declare function={myy(\z)=(sin(\z*\omega)*myr(\z);}}
+
+  \pgfmathsetmacro{\zmax}{2}
+  \pgfmathsetmacro{\othergap}{0.01}
+
+
+  \draw[densely dashed, very thin] ({myx(0)},{myy(0)})
+  \foreach \z in {0,\othergap,...,\zmax}{
+    -- ({myx(\z)},{myy(\z)})
+  };
+\end{tikzpicture}
+\end{document}

@@ -222,7 +222,7 @@
 \newtheorem{theoremx}{Theorem}[section]
 \newtheorem{corollaryx}{Corollary}[theoremx] % Reset counter w new thm
 \newtheorem{lemmax}[theoremx]{Lemma} % Same counter as thm
-
+\newtheorem{propositionx}[theoremx]{Proposition} % Same counter as thm
 
 
 
@@ -240,6 +240,11 @@
 \newenvironment{lemma}
   {\pushQED{\oldqed}\renewcommand{\qedsymbol}{$\lozenge$}\lemmax}
   {\popQED\endlemmax}
+
+\newenvironment{proposition}
+  {\pushQED{\oldqed}\renewcommand{\qedsymbol}{$\lozenge$}\propositionx}
+  {\popQED\endpropositionx}
+
 
 % And so on with definitions!
 \newtheoremstyle{snazzydefinition}  % name
@@ -260,17 +265,15 @@
 % Don't number remarks
 \newtheorem*{remark}{Remark}
 
-% \newenvironment{example}
-%   {\pushQED{\oldqed}\renewcommand{\qedsymbol}{$\lozenge$}\examplex}
-%   {\popQED\endexamplex}
-
 \newenvironment{definition}
   {\pushQED{\oldqed}\renewcommand{\qedsymbol}{$\lozenge$}\definitionx}
 {\popQED\enddefinitionx}
 
-% \newenvironment{remark}
-%   {\pushQED{\oldqed}\renewcommand{\qedsymbol}{$\lozenge$}\remarkx}
-% {\popQED\endremarkx}
+
+% `Small' proof environment (lemmas and such)
+\newenvironment{sproof}[1][Proof]
+{\begin{proof}[#1]\renewcommand{\qedsymbol}{$\square$}}
+{\popQED\end{proof}}
 
 
 
