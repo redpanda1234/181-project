@@ -1,5 +1,9 @@
 \documentclass{fkpaper}
 
+% For marking equations using TikZ
+\usetikzlibrary{tikzmark}
+
+
 % Turing machine commands and stuff
 \newcommand{\acceptState}{{\rm Accept}}
 \newcommand{\rejectState}{{\rm Reject}}
@@ -341,7 +345,7 @@ In light of the remark about {\color{red} m} {\color{orange} o}
 As stated earlier, \emph{regular languages} are tied to
 \emph{Deterministic Finite Automata}. These will lead to a more
 dynamical systems-esque view of regular languages.
-\begin{definition}[Deterministic Finite Automata]
+\begin{definition}[Deterministic Finite Automata]\label{def:dfa}
   A \emph{deterministic finite automata} is a 5-tuple
   \[
     M = (Q, F, \Sigma, \delta, q_0)
@@ -379,18 +383,115 @@ It's common to visualize DFAs through diagrams like the following:
   \includegraphics[scale=1.2]{figures/dfa-example.pdf}
   \caption{A DFA for \cref{ex:dfa-example}.}
 \end{figure}
-The common convention is that circles represent states of $Q$; the
-arrows represent the transitions given by $\delta(q, \sigma)$ (where
-$\sigma$ is the label above the arrow), and double-circled states
-represent elements of $F$.
+The convention is that circles represent states of $Q$; the arrows
+represent the transitions given by $\delta(q, \sigma)$ (where $\sigma$
+is the label above the arrow), and double-circled states represent
+elements of $F$.
+
+One can show that for every regular language $L$, there exists a DFA
+$M_L$ such that $M_L$ accepts a string $\sigma$ iff $\sigma \in L$. We
+will not give a proof today since our interests are mainly in
+describing automata by dynamical systems. We now proceed in building
+this up formally.
+
+\subsection{Subshifts of finite type}
+We want to convert our DFAs into dynamical systems. To that end, we
+first convert our \emph{alphabets} into structures we can interpret in
+terms of space. {\color{blue} This will be helpful in making our
+  theories ``meet in the middle'' in some sense: We want to be able to
+  think about our models of computation as dynamical systems on some
+  phase space; later, we'll want to go the other way. In any case, the
+  correspondence is useful.
+  % Later, we will want
+  % to analyze how dynamical systems can be interpreted as analog models
+  % for computation; here, we want to understand how models for
+  % computation can be understood in terms of dynamical systems
+}
+
+To motivate our definitions, let's first think about what we expect
+things to look like from the dynamical viewpoint. Time is easy enough;
+we can just start at $t=0$ and call each step of the computation $+1$
+unit of time.
+
+The phase space is a bit sneakier, but we'll manage. Recall that we
+want this to represent all possible \emph{states} of our system in
+question. In the 5-tuple formalism (\cref{def:dfa}), we defined
+\emph{state} by elements of a finite set $Q$; however, this is
+insufficient information to fully quantify the behavior of our DFA at
+any given point of the computation --- recall that $\delta$ depends
+not only on the ``state'' $q_i$, but also on the current character
+being read from the input. Hence we need our dynamical version of
+``state'' to include both of these pieces of information. Hence, we
+might propose something like $Q \times \Sigma$ to be our state space.
+But there's another problem here.
+
+Say we're given two strings $s_0$, $s_1$:
+\begin{align*}
+  s_0
+  &= \sigma_{i_1} \sigma_{i_2} \cdots \sigma_{i_k} \\
+  s_1
+  &= \sigma_{j_1} \sigma_{j_2} \cdots \sigma_{j_\ell}.
+\end{align*}
+Suppose now that $\sigma_{i_1} = \sigma_{j_1}$. We'll call this shared
+symbol $\sigma_1$. Observe that feeding either $s_0$ or $s_1$ into
+some DFA $M$ yields identical behavior in the first step:
+\[
+  \delta(q_0, \tikzmarknode{si1}{\sigma_{i_1}})
+  = \delta(q_0, \tikzmarknode{s1}{\sigma_1})
+  = \delta(q_0, \tikzmarknode{sj1}{\sigma_{j_1}})
+\]
+\begin{tikzpicture}[overlay, remember picture]
+  \draw (si1) -- ++(0, -.25) node[coordinate, at end] (a) {};
+  \draw (s1) -- ++(0, -.25) node[coordinate, at end] (b) {};
+  \draw (sj1) -- ++(0, -.25) node[coordinate, at end] (c) {};
+  \draw (a) -- (b) -- (c);
+  \draw (b) -- ++(0,-.25) node[at end, below] {\scriptsize all equal};
+\end{tikzpicture}
+
+Hence in both cases, the machine enters some new state $q'$. But now,
+suppose $\sigma_{i_2} \neq \sigma_{j_2}$, and further that $\delta(q',
+\sigma_{i_2}) \neq \delta(q', \sigma_{j_2})$. Then $M$ will actually
+behave differently on the two strings. Hence we see that taking our
+states to be elements of $Q \times \Sigma$ also fails to give us a
+full characterization of subsequent behavior.
+
+What we really want is a way to encode the \emph{entire} unread
+portion of the string into a state variable. We do exactly that with
+\emph{configuartions} (note, this term is nonstandard). We will first
+define \emph{unrestricted configurations}, which we'll use later in
+our definition of Turing machines\footnote{We'll repeat the definition
+  there when we need it, so don't worry about memorizing this one.}
+We'll then define \emph{DFA configurations} as a particular restricted
+subset of these unrestricted configurations.
+\begin{definition}[Unrestricted Configuration]
+  Given a DFA with states $Q$ and input alphabet $\Sigma$, define the
+  space of \emph{unrestricted configurations over $Q, \Sigma$} to be
+  \[
+    X = Q \times \pn{\prod_{i=1}^\infty \Sigma \cup \set{\epsilon}},
+  \]
+  where the $\prod$ is understood as a cartesian product.
+\end{definition}
+\begin{definition}[DFA Configuration]
+  Let $X_{\rm DFA}\subseteq X$ be defined by
+  \[
+    X_{\rm DFA} = \set{(q, \sigma) \in X \MID \sigma = \np{\sigma_1
+      \sigma_2 \cdots \sigma_n} \cdot \epsilon^\infty }.
+  \]
+  That is, pairs of states $q$ and finite strings $\sigma$ over
+  $\Sigma$.
+\end{definition}
+This ``configuration space'' turns out to be the correct choice of
+phase space. We now seek to define a \emph{topology} on $X$, which
+will in turn induce a topology on $X_{\rm DFA}$. This will give us the
+necessary framework by which to translate back and forth between
+dynamical systems and computability later on. First, recall the
+definition of a topology:
 
 
 
 
-\subsection{}
-
-
-
+To avoid confusion we'll refer to $q_i$ as
+the \emph{machine state} from now on.
 
 
 
@@ -640,5 +741,112 @@ A ``recursive'' family of temporal formulae is a set of temporal formula for whi
 To get a feel for what this definition means, and ensure that it is reasonable, let's start by confirming that the Universal Turing Machine dynamical system  is, as we expected from the start, universal.
 
 A configuration of the Universal Turing Machine, as with all Turing machines, is defined by finite control state and its tape contents, both of which can be encoded in a binary strings. So the configuration space of a UTM is a subset $X$ of $\{0,1\}^\Nn$, and the code for the UTM is some specific transition function on this space, $f$.
+
+
+
+
+
+
+
+
+\section{Appendix}
+Here, we include some of the background definitions the reader might
+not be acquainted with. First, we define a \emph{topology}.
+\begin{definition}[Topology]
+  Let $X$ be an arbitrary set. Let $\ms T$ be a collection of $U
+  \subseteq X$ such that
+  \begin{enumerate}
+    \item (Containment of trivial elements): $\varnothing$, $X \in \ms
+      T$,
+    \item (Closure under arbitrary unions): For arbitrary collections
+      $\set{U_i}_{i \in I} \subseteq \ms T$, we have
+      \[
+      \pn{\bigcup_{i \in I} U_i } \in \ms T,
+      \]
+      and
+    \item (Closure under finite intersection): For finite collections
+      $\set{U_i}_{i = 1}^n$, we have
+      \[
+      \pn{\bigcap_{i=1}^n U_i} \in \ms T. \qedhere
+      \]
+  \end{enumerate}
+  Then we call $\ms T$ a \emph{topology} on $X$.
+\end{definition}
+The definition of a \emph{topology} is meant to axiomatize the
+properties of \emph{open sets} that we encounter in analysis. Indeed,
+one might note that in any metric space $X$, (1) both $\varnothing$
+and $X$ are open sets, (2) open sets are closed under arbitrary union,
+and (3) open sets are closed under finite intersection.
+
+However, one should note that this is a \emph{proper} generalization,
+in the sense that there exist topologies which cannot arise from a
+metric. For instance, consider the following:
+\begin{definition}[Double-headed snake]
+  Let $X = \set{0_{A}, 0_{B}} \cup \pb{0, 1}$. Here, the labels $A$
+  and $B$ are just to distinguish the two ``copies'' of $0$ that we've
+  made. Define a topology $\ms T$ on $X$ as follows:
+  \begin{enumerate}
+    \item Let $U \subseteq (0,1]$. Then if $U$ is open in $[0,1]$
+      viewed as a metric space, we have $U \in \ms T$.
+    \item Similarly: Given such a $U$, we have $\set{0_A} \cup U$,
+      $\set{0_B} \cup U \in \ms T$. \qedhere
+  \end{enumerate}
+\end{definition}
+This effectively gives us a version of $[0,1]$ where we have two
+copies of $0$. One can verify that the topology axioms are satisfied
+
+So, why isn't this topology metrizable? In a nutshell, the problem is
+that $0_A$, $0_B$ act as if they are distance $0$ apart from each
+other, which breaks the ``$d(x,y) = 0 \iff x = y$'' axiom for metric
+spaces.\footnote{A more rigorous argument can be constructed by noting
+  that $\forall \varepsilon > 0$, $\set{0_A} \cup (0,\varepsilon)$ and
+  $\set{0_B} \cup (0, \varepsilon)$ are open and then doing something
+  like $0_A = \lim_{\varepsilon \to 0} \varepsilon = 0_B$, a
+  contradiction.}
+
+This underscores that topology is generally a more abstract way of
+looking at properties of space. There are a number of situations in
+which this abstraction is desired. First, it helps us to focus on
+more ``abstract'' properties of space that are invariant under
+stretching and deforming (but not gluing or tearing) --- e.g., in a
+topological context, the two shapes shown in \cref{fig:deform-grid}
+are the ``same.''
 \end{multicols}
+\begin{figure}[H]
+  \centering
+  \includegraphics[scale=.325, angle=0]{figures/deform-grid.pdf}
+  \caption{Two shapes that are topologically equivalent}
+  \label{fig:deform-grid}
+\end{figure}
+\begin{figure}[H]
+  \centering
+  \includegraphics[scale=.325, angle=0]{figures/deform-grid-annulus.pdf}
+  \caption{Two shapes that are topologically equivalent to each other,
+    but not to those in \cref{fig:deform-grid}}
+  \label{fig:deform-annulus}
+\end{figure}
+\begin{multicols}{2}
+  Often, these are the kinds of properties we're interested in when we
+  try to find ways of thinking of random sets $X$ that we've just
+  scooped out of a bush on the side of the street in terms of
+  ``spaces.''
+
+  {\color{blue} is there more to say here?}
+
+  \begin{definition}[Discrete Topology]
+    Let $X$ be a set. Then we define the \emph{discrete topology} on
+    $X$ to be the powerset:
+    \[
+      \ms T_{\rm discrete} = \set{U \MID U \subseteq X}.
+    \]
+  \end{definition}
+  In the discrete topology, every set is open.
+\end{multicols}
+
+
+
+
+
+
+
 \end{document}

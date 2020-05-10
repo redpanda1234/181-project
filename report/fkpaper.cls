@@ -101,9 +101,9 @@
 
 % them appropriately sized, and what have you.
 \titleformat{\section}
-  {\large\bfseries\filcenter}{\scshape\thesection.}{.5em}{}
+  {\Large\scshape\filcenter}{\scshape\thesection.}{.5em}{}
 \titleformat{\subsection}
-  {\bfseries\filcenter}{\bfseries\thesubsection.}{.5em}{}
+  {\large\scshape\filcenter}{\scshape\thesubsection.}{.5em}{}
 \titleformat{\subsubsection}
   {\scshape\filcenter}{\bfseries\thesubsubsection.}{.5em}{}
 
