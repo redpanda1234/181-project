@@ -395,32 +395,44 @@ describing automata by dynamical systems. We now proceed in building
 this up formally.
 
 \subsection{Putting a Topology on our Strings}
-We want to convert our DFAs into dynamical systems. To that end, we
-first convert our \emph{alphabets} and their \emph{strings} into
-structures we can interpret in terms of space. {\color{blue} This will
-  be helpful in making our theories ``meet in the middle'' in some
-  sense: We want to be able to think about our models of computation
-  as dynamical systems on some phase space; later, we'll want to go
-  the other way. In any case, the correspondence is useful. }
+We want to convert our DFAs into dynamical systems. Recall, we think
+of an abstract dynamical system in terms of the following definition:
+\begin{definition}[Dynamical System]
+  Let $M^m$ be an $m$-manifold, and let $(T, +)$ be a monoid. Let
+  $\Phi : T \times M^m \to M^m$ such that for all $x \in M^m$,
+  \begin{enumerate}
+    \item $\Phi(0, x) = x$, and
+    \item For all $t,s \in T$, $\Phi(t + s, x) = \Phi(s, \Phi(t, x))$.
+  \end{enumerate}
+  Then we call $(M^m, T, \Phi)$ a \emph{dynamical system}. In
+  particular, we call $M^m$ the \emph{phase space}, $t \in T$ the
+  \emph{evolution parameter}, and $\Phi$ the \emph{evolution map}.
+\end{definition}
+To make our DFAs conform to this definition, we need to find sensible
+things to call $M^m$, $T$, and $\Phi$. Let's think about what we
+expect each of these to look like. The choice of evolution parameter
+is easy enough; we can just think of $T$ as $\NN$ with $t=0$
+corresponding to the initialization step and each $t > 0$ as
+corresponding to the $n$\textsuperscript{th} step of computation.
+Then, $\Phi$ will correspond to executing some step of the
+computation.
 
-To motivate our definitions, let's first think about what we expect
-things to look like from the dynamical viewpoint. Time is easy enough;
-we can just start at $t=0$ and call each step of the computation $+1$
-unit of time.
+The phase space is a bit trickier. For now, we'll set aside the
+concerns of what it means to be an $m$-manifold and just focus on
+thinking of what $M^m$ might look like as a set.
 
-The phase space is a bit sneakier, but we'll manage. Recall that we
-want this to represent all possible \emph{states} of our system in
-question. In the 5-tuple formalism (\cref{def:dfa}), we defined
-\emph{state} by elements of a finite set $Q$; however, this is
+Recall that we want $M^m$ to represent all possible \emph{states} of
+our system in question. In the 5-tuple formalism (\cref{def:dfa}), we
+defined \emph{state} by elements of a finite set $Q$; however, this is
 insufficient information to fully quantify the behavior of our DFA at
 any given point of the computation --- recall that $\delta$ depends
 not only on the ``state'' $q_i$, but also on the current character
 being read from the input. Hence we need our dynamical version of
-``state'' to include both of these pieces of information. Hence, we
-might propose something like $Q \times \Sigma$ to be our state space.
-But there's another problem here.
+``state'' to include both of these pieces of information.
 
-Say we're given two strings $s_0$, $s_1$:
+We might propose something like $Q \times \Sigma$ to be our state
+space. But there's another problem here. Say we're given two strings
+$s_0$, $s_1$:
 \begin{align*}
   s_0
   &= \sigma_{i_1} \sigma_{i_2} \cdots \sigma_{i_k} \\
@@ -474,11 +486,12 @@ subset of these unrestricted configurations.
   $\epsilon_{n+1}^\infty = \prod_{i=+1}^\infty \epsilon$. Then we
   define $X_{\rm DFA}\subseteq X$ by
   \[
-    X_{\rm DFA} = \set{(q, \sigma) \in X \MID \sigma =
+    X_{\rm DFA} = \set{(q, \sigma) \in X_{\rm unrest} \MID \sigma =
       \pn{\epsilon_{-\infty}^0 \cdot \np{\sigma_1 \sigma_2 \cdots
           \sigma_n} \cdot \epsilon_{n+1}^\infty}},
   \]
-  where $n \in \NN$ is understood to be arbitrary.
+  where $n \in \NN$ is understood to be arbitrary, and all of the
+  $\sigma_1, \ldots, \sigma_n \neq \epsilon$.
 \end{definition}
 Recalling that $\epsilon$ is the empty string, we see that $X_{\rm
   DFA}$ is comprised of pairs of states $q$ and finite strings
@@ -487,15 +500,23 @@ $0$. We will not need the negative indices until we discus Turing
 machines.
 
 In any case, this ``configuration space'' turns out to be the correct
-choice of phase space. We now seek to define a \emph{topology} on
-$X_{\rm unrest}$, which will in turn induce a topology on $X_{\rm
-  DFA}$ (if the reader is not familiar with topology, we've included a
-few definitions in the appendix). This will give us natural way to
-translate back and forth between dynamical systems and computability.
-To do so, we will begin by endowing our building block sets $\Sigma
-\cup \set{\epsilon}$ with a topology, and then describing how to
-preserve this structure sensibly when we glue infinitely-many of them
-together.
+choice of phase space. Woohoo! Now, all that remains is to address the
+$m$-manifold condition. To that end we will first convert our
+\emph{alphabets} and their \emph{strings} into sets with topological
+structure. If the reader is not familiar with topology, we've included
+a few definitions in the appendix --- however, we should warn that the
+material below is rather technical, and hence might border on
+overwhelming. We have chosen to include it because we feel it's
+helpful to see how the results are all built up, since this lends
+credence to later claims that the {\color{red} $p$-adic metric on
+  $(\Sigma \cup \set{\epsilon})^\ZZ$ is indeed the natural choice. But
+  not much will be lost to the reader who chooses just to skim, so
+  feel free to do that.}
+
+
+We will begin by endowing our building block sets $\Sigma \cup
+\set{\epsilon}$ with a topology, and then describing how to preserve
+this structure sensibly when we glue infinitely-many of them together.
 \begin{definition}[Discrete Topology]
   Let $X$ be an arbitrary set. Define the \emph{discrete} topology
   $\ms T_{\rm discrete}$ on $X$ by letting every $U \subseteq X$ be an
@@ -771,48 +792,123 @@ possible values for the blue portion itself.
 \end{sproof}
 
 
+% {\color{blue} AAAAAAAAAAAAAAAa}
 
-\begin{proposition}\label{prop:product-metrizable} {\color{blue}
-    reindex me!}
-  For each $n \in \NN$, let $(X_k, \ms T_k)$ be a discrete topological
+\begin{proposition}\label{prop:product-metrizable}% {\color{blue}
+    % reindex me!}
+  For each $k \in \ZZ$, let $(X_k, \ms T_k)$ be a discrete topological
   space. Then $X = \prod_{n\in\NN} X_k$ is metrizable, with metric
   given by
   \[
-    d(\pn{x_i}_{i \in \NN}, \pn{x_j}_{j \in \NN}) =
+    d(\pn{x_i}_{i \in \ZZ}, \pn{y_i}_{i \in \ZZ}) =
     \begin{cases}
-      0 & \pn{x_i}_{i \in \NN} = \pn{x_j}_{j \in \NN} \\
-      2^{-k} & k \textnormal{ first index s.t.\ } x_k \neq x_k
-    \end{cases}
+      0 & x_i = y_i \\
+      2^{-\abs{k}} & k \textnormal{ first ind.\ s.t.\ } x_i \neq x_j
+    \end{cases} \qedhere
   \]
 \end{proposition}
+\begin{remark}
+  Note that if $\Sigma = \set{0,1}$, this is the $p$-adic metric on
+  $\set{0,1}^{\ZZ}$.
+\end{remark}
 \begin{sproof}
   Note that the open balls in this metric yield the exact same base as
   in \cref{prop:prefix-basis}.
 \end{sproof}
-
 OK! \emph{Finally} we can summarize all of this in terms of what it
 means for our actual set of interest, $X_{\rm unrest}$. The upshot is
 as follows.
 \begin{itemize}
   \item The elements of $X_{\rm unrest}$ are pairs $(q, \sigma)$ where
-    $\sigma$ is an infinite sequence of characters from $\Sigma \cup
-    \set{\epsilon}$.
+    $\sigma$ is a bi-directional infinite sequence of characters from
+    $\Sigma \cup \set{\epsilon}$.
   \item \emph{Open balls} in $X_{\rm unrest}$ are sets of sequences
-    that share a prefix of some length.
+    that share a segment around the $0$\textsuperscript{th} character.
   \item The open balls defined above are actually \emph{clopen}.
   \item \emph{Open sets} in $X_{\rm unrest}$ are arbitrary unions
     and/or finite intersections of the open balls above.
-  \item In any case, we can think of the \emph{union} operation for
-    our open sets as upping the number of valid options for the
-    $i$\textsuperscript{th} term in some sequence, while the
-    \emph{intersection} operation restricts the choices.
-  \item
+  \item We can think of the \emph{union} operation for our open sets
+    as upping the number of valid options for some index in our
+    sequence, while the \emph{intersection} operation restricts our
+    choices.
 \end{itemize}
 
 
 \subsection{Finally! Converting to a Dynamical System}
+Alright! Now, we can \emph{finally} get to turning our DFAs into
+dynamical systems.%  {\color{blue} Make sure that the subspace topology
+  % explanation exists.}
+Let $Q$ be our state set, and let $\Sigma$ be our alphabet. As always
+we take $\epsilon$ to be the empty string. Recall, we define $X_{\rm
+  DFA}$
+\[
+  X_{\rm DFA} = \set{(q, \sigma) \in X_{\rm unrest} \MID \sigma =
+    \pn{\epsilon_{-\infty}^0 \cdot \sigma_1 \sigma_2 \cdots \sigma_n
+      \cdot \epsilon_{n+1}^\infty}},
+\]
+Endow $X_{\rm DFA}$ with the subspace topology from $X_{\rm unrest}$.
+Then we have the following proposition:
+\begin{proposition}
+  $X_{\rm DFA}$ is a $0$-manifold.
+\end{proposition}
+Note, $0$-manifolds are exactly discrete topological spaces.
+\begin{sproof}
+  Let $x \in X_{\rm DFA}$ be arbitrary. Write it as
+  \[
+    x = \epsilon^0_{-\infty} \cdot \np{\sigma_1 \sigma_2 \cdots
+      \sigma_n} \cdot \epsilon_{n+1}^\infty.
+  \]
+  Then note that taking $\varepsilon = 2^{-(n+1)}$, we see
+  \begin{align*}
+    B_\varepsilon(x)
+    &= \set{x' \in X_{\rm dfa} \MID x'_1 \cdots x'_{n+1} = \sigma_1
+      \cdots \sigma_n \epsilon} \\
+    &= \set{x},
+  \end{align*}
+  Since by definition, as soon as the $\epsilon$'s start for an
+  element of $X_{\rm DFA}$, they keep on crankin' out until the
+  entropic cows come home to the heat-death of the universe.
+\end{sproof}
+Neato!!!!!!!!!!!!!! Now we can define the whole thing:
+\begin{definition}[DFA Dynamical System]
+  Let $M = (Q, F, \Sigma, \delta, q_0)$. Define $X_{\rm DFA}$ as
+  usual, with the subspace topology from $X_{\rm unrest}$. We'll omit
+  the $\epsilon_{-\infty}^0$ and $\epsilon_{n+1}^\infty$
+  prefixes/suffixes for the sake of notational brevity.
 
-
+  Let $T = \NN$. Then define $\Phi : T \times X_{\rm DFA} \to X_{\rm
+    DFA}$ by
+  \[
+    \Phi(1, ({\color{blue}q}, {\color{red} \np{\sigma_1 \sigma_2
+        \cdots \sigma_n}}))
+    = ({\color{blue} \delta(q, \sigma_1)}, {\color{red} \np{\sigma_2
+        \cdots \sigma_n}}),
+  \]
+  and
+  \[
+    \Phi(n, ({\color{blue}q }, {\color{red} \sigma})) =
+    \underbrace{\Phi(1, \Phi(1, \Phi(\cdots \Phi(1, ({\color{blue}
+        q}, {\color{red} \sigma})))))}_{n \text{ times}}
+  \]
+  Then this gives us a dynamical systems encoding for DFAs.
+\end{definition}
+\begin{remark}
+  If we had defined $X_{\rm DFA}$ instead by
+  \[
+    X_{\rm DFA} = \set{(q, \sigma) \in X_{\rm unrest} \MID \sigma =
+      \epsilon_{-\infty}^{k_1-1} \cdot \sigma_{k_1} \cdots
+      \sigma_{k_2} \cdot \epsilon_{k_2+1}^\infty}
+  \]
+  then we could make the evolution map $\Phi$ invertible, and in fact
+  a homeomorphism.
+\end{remark}
+In this case, we see that the \emph{fixed points} are exactly the $(q,
+\sigma)$ such that
+\[
+  \sigma = \epsilon_{-\infty}^{\infty},
+\]
+which reflects the intuition that the DFA performs no computation on
+the empty string.
 
 % Note, in the case $I$ is countable and all of our $X_i$'s have the
 % discrete topology, the product topology is metrizable by
@@ -929,6 +1025,7 @@ then repeat. If the Turing machine reaches the state $\cmark$, then it
 halts and the input is said to be ``accepted.'' If it reaches
 $\xmark$, the state is ``rejected.'' {\color{blue} In the case that
   the machine never halts, we treat this as a form of rejection.}
+
 
 
 
