@@ -623,13 +623,14 @@ below. First, we prove a general result for product spaces.
     j_{i, {\rm max}} = \max_{j_\ell = j_1, \ldots, j_{k_i}} \set{j_\ell}.
   \]
   And similarly for $j_{i, {\rm min}}$. Then observe that for all $i$,
-  for all $k > j_{i, {\rm max}}$ or $k < j_{i, {\rm max}}$, we have
+  for all $k > j_{i, {\rm max}}$ or $k < j_{i, {\rm min}}$, we have
   \[
     \pi_{k} \pn{\bigcap_{j_\ell = j_1}^{j_{k_i}}
       \pi_{j_\ell}^{-1}(V_{j_\ell})} = X_{k}.
   \]
-  Hence, it's only possible for $U_k \neq X_k$ for $n \leq j_{i, {\rm
-      max}}$, which represents finitely-many of the $U_n$.
+  Hence, it's only possible for $U_k \neq X_k$ for $j_{i, {\rm
+      min}}\leq n \leq j_{i, {\rm max}}$, which represents
+  finitely-many of the $U_n$.
 \end{sproof}
 \begin{proposition}\label{prop:clopen-discrete}
   With all variables quantified as above, if each of the $X_k$'s have
@@ -659,53 +660,118 @@ In particular, when $T = B$, we have
   directly from applying \cref{prop:singleton-cylinder} to $U_i^c$.
 \end{sproof}
 We have one final proposition, which the reader should think of in
-terms of the context of $X_{\rm unrest}$.
+terms of the context of $X_{\rm unrest}$. Like all claims involving
+the product topology, the statement looks technical, but it's saying
+something very simple: Namely, open balls in $X$ are collections of
+sequences that share a common portion around the
+$0$\textsuperscript{th} character.
+
+\textbf{Note:} For the sake of making things fit on one line, we'll
+use the notation
+\[
+  X_{-\infty}^{k_1} = \prod_{i=-\infty}^{k_1}X_i
+  \qquad\text{and}\qquad
+  X_{k_2+1}^{\infty} = \prod_{i=k_2+1}^{\infty}X_i
+\]
+in the following. We'll also interpret the somewhat-incomprehensible
+notation
+\[
+  \bigcup_{x_i \in X_i} \pn{\prod_{i = k_1}^{k_2} \set{x_i}}
+\]
+quite liberally as ``all possible strings of characters that could
+appear between index $k_1$ and $k_2$ inclusive.''
 \begin{proposition}\label{prop:prefix-basis}
   For all $k \in \ZZ$, let $(X_k, \ms T_k)$ be discrete topological
-  spaces. Define $X = \prod_{k\in\ZZ} X_k$. For each $k \in \ZZ$, and
-  for each $i \in \set{1, \ldots, k}$, define $x_i \in X_i$. Then the
-  collection $\ms B$ given by
+  spaces. Define $X = \prod_{k\in\ZZ} X_k$.%  In the below, fo each $k
+  % \in \ZZ^{\geq 0}$ (nonnegative integers) and for each $i \in
+  % \set{-k, \ldots, k}$, we'll use $x_i$ to denote an arbitrary element
+  % of $X_i$.
+  Then the collection $\ms B$ given by
   \[
-    \ms B = \bigcup_{k \in \ZZ} \bigcup_{x_i \in X_i} \pn{\set{x_{1}}
-      \times \cdots \times \set{x_{k}} \times \prod_{i=k+1}^\infty
-      X_i}
+    \ms B = \bigcup_{\substack{k_1, k_2 \in \ZZ \\ k_1 \leq 0 \leq k_2}}
+    \bigcup_{x_i \in X_i} X_{-\infty}^{k_1-1} \times
+    % \set{x_{k_1}} \times \cdots \times \set{x_{k_2}}
+    \pn{\prod_{i = k_1}^{k_2} \set{x_i}}
+    \times X_{k_2+1}^\infty
   \]
   defines a topological base for $\ms T_{\rm prod}$.
 \end{proposition}
+Again, since we've had to make multiple notational compromises here,
+we'll take the opportunity to clarify what a prototypical element of
+$\ms B$ looks like. It's a collection of \emph{all} bi-directional
+sequences that are identical in the {\color{blue} blue} portion of
+$\cdots \sigma_{k_1-1} {\color{blue} \sigma_{k_1} \cdots \sigma_{k_2}}
+\sigma_{k_2+1} \cdots$, where $k_1 \leq 0 \leq k_2$.
+
+The unions we use to define $\ms B$ range over all possible choices of
+endpoints $k_1 \leq 0 \leq k_2$, and for fixed $k_1$, $k_2$, over all
+possible values for the blue portion itself.
 \begin{sproof}
+  We are using the definition of a base given in \cref{def:base}.
   First, note that
   \[
     X = \bigcup_{B \in \ms B} B,
   \]
-  hence $\ms B$ satisfies the covering axiom for a base. Now, let
-  $B_1, B_2 \in \ms B$ be arbitrarily chosen. Write these as
-  {\color{blue} Need to come back and update indexing scheme now that
-    we're using $k \in \ZZ$}
+  hence $\ms B$ satisfies the covering axiom for a base. We want to
+  show it satisfies the second. Let $B_1, B_2 \in \ms B$ be
+  arbitrarily chosen. Write these as
   \begin{align*}
     B_1
-    &= \set{x_{1,1}} \times \set{x_{1,2}} \times \cdots \times
-      \set{x_{1,\ell_1}} \times \prod_{i=\ell_1+1}^\infty X_i \\
+    &= X_{-\infty}^{\ell_1-1}\times \set{x_{1,\ell_1} } \times
+      \cdots \times \set{x_{1,\ell_2}} \times X_{\ell_2+1}^\infty \\
     B_2
-    &= \set{x_{2,1} } \times \set{x_{2,2}} \times \cdots \times
-      \set{x_{2,k_2}} \times \prod_{i=k_2+1}^\infty X_i
+    &= X_{-\infty}^{m_1-1}\times \set{x_{1,m_1} } \times \cdots \times
+      \set{x_{1,m_2}} \times X_{m_2+1}^\infty
   \end{align*}
   We have two cases.
   \begin{enumerate}
-    \item Suppose that there exists $\ell \in \set{1, \ldots,
-      \min\set{k_1, k_2}}$ with $x_{1,\ell} \neq x_{2,\ell}$. Then
-      $B_1 \cap B_2 = \varnothing$. Thus in this case, the
-      ``intersection stuff'' axiom for a base (see \cref{def:base}) is
-      satisfied vacuously. \cmark
-    \item Suppose that no such $k$ exists. Then without loss of
-      generality, suppose that the $x_{1,i}$ form a prefix of the
-      $x_{2,j}$'s (in the sense that for all {\color{blue} reindex!}
-      $k = 1, \ldots, n_1$, $x_{1,k} = x_{2,k}$). Then $B_1 \cap B_2 =
-      B_1$, which is an element of $\ms B$. \cmark
+    \item Suppose there exists $k \in \set{\max\set{\ell_1, m_1},
+      \ldots, \min\set{\ell_2, m_2}}$ such that $x_{1,k} \neq
+      x_{2,k}$. Then $B_1 \cap B_2 = \varnothing$. Thus in this case,
+      the ``intersection stuff'' axiom for a base is satisfied
+      vacuously. \cmark
+    \item Suppose that no such $k$ exists. Let $k_1 = \min\set{\ell_1,
+      m_1}$ and $k_2 = \max\set{\ell_2, m_2}$ (note, this is the
+      opposite of the situation we described above). Then
+      \[
+      B_1 \cap B_2 = X_{-\infty}^{k_1 - 1} \times \set{x_{k_1}} \times
+      \cdots \times \set{x_{k_2}} \times X_{k_2+1}^\infty,
+      \]
+      which is an element of $\ms B$, hence the ``intersection stuff''
+      axiom is satisfied here as well. \cmark
   \end{enumerate}
   In either case, we see that the second axiom for a basis
-  (``intersection stuff'') is satisfied. It follows that $\ms B$
-  generates $\ms T_{\rm prod}$.
+  (``intersection stuff'') is satisfied.
+
+  Finally, we want to show it satisfies the third axiom (generation of
+  by union). By \cref{prop:singleton-cylinder}, it suffices to show
+  that the $\ms B$ generate arbitrary singleton cylinders. Let $i \in
+  \ZZ$ be arbitrary, and let $x_i \subseteq X_i$ be arbitrary. Note,
+  if $i = 0$, then we have
+  \begin{align*}
+    X_{-\infty}^{i-1} \times \set{x_i} \times X_{i+1}^{\infty}
+    &= X_{-\infty}^{-1} \times \set{x_0} \times X_{1}^{\infty} \\
+    &= \pi_{0}^{-1}(\set{x_0}),
+  \end{align*}
+  hence the statement holds.
+
+  Now, suppose that $i > 0$; the $i < 0$ case follows almost
+  identically. Note that, employing our abuse of
+  notation\footnote{I.e., $x_k \in X_k$ is quantified before $k$
+    itself, and taken to mean that we allow the singletons in the
+    product to range over all possible values over the union} again,
+  then we have
+  \[
+    \pi_{i}^{-1}(\set{x_i}) = \bigcup_{x_k \in X_k} X_{-\infty}^{i -
+      1} \times \pn{\prod_{k=0}^{i-1} \set{x_k}} \times \set{x_i}
+    \times X_{i+1}^{\infty},
+  \]
+  hence $\ms B$ generates arbitrary singleton cylinders. It follows
+  that $\ms B$ generates all open sets of $\ms T_{\rm prod}$.
 \end{sproof}
+
+
+
 \begin{proposition}\label{prop:product-metrizable} {\color{blue}
     reindex me!}
   For each $n \in \NN$, let $(X_k, \ms T_k)$ be a discrete topological
