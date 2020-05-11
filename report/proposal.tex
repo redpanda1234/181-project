@@ -900,15 +900,26 @@ Neato!!!!!!!!!!!!!! Now we can define the whole thing:
       \sigma_{k_2} \cdot \epsilon_{k_2+1}^\infty}
   \]
   then we could make the evolution map $\Phi$ invertible, and in fact
-  a homeomorphism.
+  a homeomorphism. We chose not to do so, since being agnostic about
+  prior state is more in keeping with our intuition about DFAs.
 \end{remark}
-In this case, we see that the \emph{fixed points} are exactly the $(q,
-\sigma)$ such that
-\[
-  \sigma = \epsilon_{-\infty}^{\infty},
-\]
-which reflects the intuition that the DFA performs no computation on
-the empty string.
+Anyways, the big-picture takeaways are as follows:
+\begin{itemize}
+  \item Any valid initial condition for $t = 0$ must have $q = q_0$.
+  \item The \emph{fixed points} of $(X_{\rm DFA}, T, \Phi)$ occur
+    exactly when $x = (q, \sigma)$ with
+    \[
+    \sigma = \epsilon_{-\infty}^{\infty},
+    \]
+    which reflects the intuition that the DFA performs no computation on
+    the empty string. That is, ``halting states of the DFA \texttt{==}
+    fixed points of the Dynamical System''
+  \item {\color{red} anything else? }
+\end{itemize}
+The constructions for the next two layers (\emph{context-free} and
+\emph{context-sensitive})
+
+
 
 % Note, in the case $I$ is countable and all of our $X_i$'s have the
 % discrete topology, the product topology is metrizable by
@@ -1220,7 +1231,7 @@ and (3) open sets are closed under finite intersection.
 However, one should note that this is a \emph{proper} generalization,
 in the sense that there exist topologies which cannot arise from a
 metric. For instance, consider the following:
-\begin{definition}[Double-headed snake]
+\begin{example}[Double-headed snake]
   Let $X = \set{0_{A}, 0_{B}} \cup \pb{0, 1}$. Here, the labels $A$
   and $B$ are just to distinguish the two ``copies'' of $0$ that we've
   made. Define a topology $\ms T$ on $X$ as follows:
@@ -1230,7 +1241,7 @@ metric. For instance, consider the following:
     \item Similarly: Given such a $U$, we have $\set{0_A} \cup U$,
       $\set{0_B} \cup U \in \ms T$. \qedhere
   \end{enumerate}
-\end{definition}
+\end{example}
 This effectively gives us a version of $[0,1]$ where we have two
 copies of $0$. One can verify that the topology axioms are satisfied
 
@@ -1266,31 +1277,99 @@ are the ``same.''
 \end{figure}
 \begin{multicols}{2}
   Often, these are the kinds of properties we're interested in when we
-  try to find ways of thinking of random sets $X$ that we've just
-  scooped out of a bush on the side of the street in terms of
-  ``spaces.''
+  try to find ways of thinking of {\color{red} random sets $X$ that
+    we've just scooped out of a bush on the side of the street in
+    terms of ``spaces.''} Understanding exactly what we mean by
+  invariance under ``stretching and deforming'' is the subject of the
+  next section.
 
-  {\color{blue} is there more to say here?}
+  % {\color{blue} is there more to say here?}
 
-  \begin{definition}[Discrete Topology]
-    Let $X$ be a set. Then we define the \emph{discrete topology} on
-    $X$ to be the powerset:
+  \subsection{Continuity}
+  In abstract algebra, we define \emph{homomorphisms} to be functions
+  that preserve the ``structure'' of algebraic objects like groups,
+  rings, and so on. In linear algebra, \emph{linear transformations}
+  similarly preserve the structure of vector spaces.
+  \emph{Isomorphisms} in group theory provide a sense of ``perfect,
+  reversible matching,'' just as \emph{invertible linear
+    transformations} (``vector space isomorphisms'') do in linear
+  algebra.
+
+  These are examples of \emph{morphisms}, a broader term for
+  structure-preserving maps {\color{red} that sees a lot of tasteless
+    name-dropping by people like us who got too excited about category
+    theory once upon a time.} In defining an abstract topology, we
+  have created a structure. We now define the maps that preserve that
+  structure. The answer is continuous functions, and the inspiration
+  comes from thinking about continuous functions in metric spaces.
+
+  Let $(E,d)$, $(E', d')$ be metric spaces, and let $f : E \to E'$ be
+  continuous. Then recall the following properties of $f$:
+  \begin{itemize}
+    \item For all compact sets $V \subseteq E$, $f(V)$ is compact in
+      $E'$,
+    \item For all connected sets $C \subseteq E$, $f(C)$ is connected
+      in $E'$, and
+    \item For all open sets $U \subseteq E'$, the inverse image
+      $f^{-1}(U)$ is open in $E$. In fact, this is an equivalent way
+      to characterize continuity.
+  \end{itemize}
+  For all these reasons (especially the final one), it turns out that
+  continuous functions provide the natural definition of morphism for
+  our topological spaces. We can loosely interpret continuous
+  functions as preserving the notion of \emph{closeness} of points,
+  which is essentially the fundamental ``structure'' of a metric
+  space. Again, this is analogous to the definition of a group
+  homomorphism
+  \[
+    \varphi({\color{blue}g} + {\color{blue}h}) = \varphi({\color{blue}
+      g}) + \varphi({\color{blue} h}),
+  \]
+  or a linear transformation
+  \[
+    T({\color{orange} c_1} {\color{blue}u} + {\color{orange} c_2}
+    {\color{blue} v})) = {\color{orange} c_1} T({\color{blue} u}) +
+    {\color{orange} c_2} T({\color{blue} v}).
+  \]
+  In particular, writing out the definition of continuity, we see that
+  it has the same basic structure of ``property in the domain is
+  preserved in the codomain:''
+  \[
+    d({\color{blue} x_0, x_1}) < \delta \implies
+    d(f({\color{blue}x_0}), f({\color{blue}x_1})) < \varepsilon.
+  \]
+  The details get slippery if you poke around too closely, but the
+  intuition is there. Anyways: Since not all topologies are
+  metrizable, we choose a definition that relies only on topological
+  structure, but which coincides with continuity in the case of metric
+  spaces.
+  \begin{definition}[Continuous function]
+    Let $(X, \ms T_X)$, $(Y, \ms T_Y)$ be topological spaces. Let $f :
+    X \to Y$. Then we say $f$ is \emph{continuous} iff for all $U\in
+    \ms T_Y$,
     \[
-      \ms T_{\rm discrete} = \set{U \MID U \subseteq X}. \qedhere
+      f^{-1}(U) \in \ms T_X. \qedhere
     \]
   \end{definition}
-  In the discrete topology, every set is open.
-  \begin{proposition}
-    The discrete topology on a set $X$ is metrizable. One metric
-    yielding $\ms T_{\rm discrete}$ is
-    \[
-      d(x_0, x_1) =
-      \begin{cases}
-        0 & x_0 = x_1 \\
-        1 & x_0 \neq x_1.
-      \end{cases} \qedhere
-    \]
-  \end{proposition}
+  This is a bit strange, since the structure-preservation occurs in
+  taking the inverse image, not the image. We won't go into the weeds
+  of trying to interpret this, and will instead just talk about the
+  concept that \emph{does} port well: topological isomorphism, almost
+  universally referred to as \emph{homeomorphism}.
+  \begin{definition}[Homeomorphism]
+    Let $(X, \ms T_X)$, $(Y, \ms T_Y)$ be topological spaces. Let $f :
+    X \to Y$ be continuous and bijective. Further suppose $f^{-1}$ is
+    continuous. Then we call $f$ a \emph{homeomorphism}.
+  \end{definition}
+  Homeomorphisms provide the rigorous underpinning for thinking about
+  ``smooth deformations'' on a space.
+
+  {\color{blue} insert some discussion of bases in linear algebra and
+    generators in abstract algebra and how a base is kinda like that}
+
+  {\color{blue} also insert some discussion of manifolds}
+
+
   \begin{definition}[Base]\label{def:base}
     Let $(X, \ms T)$ be a topological space. Let $\ms B \subseteq \ms
     T$ such that
