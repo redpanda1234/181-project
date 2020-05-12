@@ -1043,11 +1043,7 @@ $\xmark$, the state is ``rejected.'' {\color{blue} In the case that
 \section{Computational Universality}
 
 A Universal Turing Machine is a Turing machine which can simulate any
-arbitrary Turing Machine. It takes as its Turing Machine code, and an
-input word, and then simulates the Turing Machine on that input.
-Intuitively, any modern computer is a (finite memory) Universal Turing
-Machine: it can store arbitrary computer programs as data, and then
-run them on other data it stores or with user input.
+arbitrary Turing Machine. It takes as its input a Turing Machine code $\langle M \rangle$ (for turing machine $M$ we'll denote the code of $M$ by $\langle M \rangle$), and an input word $w$, and then simulates what $M$ would do on input $w$. Intuitively, any modern computer is a (finite memory) Universal Turing Machine: it can store arbitrary computer programs as data, and then run them on other data it stores or with user input.
 
 In a similar vein, a system is {\it computationally universal} (or
 just {\it universal}) if it has the ability to simulate an arbitrary
@@ -1190,8 +1186,11 @@ A ``recursive'' family of temporal formulae is a set of temporal formula for whi
 
 To get a feel for what this definition means, and ensure that it is reasonable, let's start by confirming that the Universal Turing Machine dynamical system  is, as we expected from the start, universal.
 
-A configuration of the Universal Turing Machine, as with all Turing machines, is defined by finite control state and its tape contents, both of which can be encoded in a binary strings. So the configuration space of a UTM is a subset $X$ of $\{0,1\}^\Nn$, and the code for the UTM is some specific transition function on this space, $f$.
+A configuration of the Universal Turing Machine, as with all Turing machines, is defined by finite control state and its tape contents, both of which can be encoded in a binary strings. So the configuration space of a UTM is a subset $X$ of $\{0,1\}^\Nn$, and the code for the UTM is some specific transition function on this space, $f$. Let's assume we are dealing with a a UTM that takes as input $\langle M \rangle, w, x$ with some special encoding of the delimiter ``$,$''. The machine first checks that its input is of this form, and halts immediately if it is not, and otherwise ignores $x$ and simulates $M$ on $w$. (We put the $x$ there so that we can have an arbitrary string on the end of our input, and the set of starting configurations given a specific choice of $M$ and $w$ will be a clopen set.)
 
+To show this dynamical system is universal, we're looking for recursive family of formula whose satisfiability is r.e.-complete. Consider all the possible pairs of turing machine encodings, $\langle M \rangle$, and inputs $w$. Given such a pair, let $P_m$ represent the clopen set of all UTM configurations in the starting state and tape contents beginning with ``$\langle M \rangle , w,$''. Let $P_{h}$ represent the clopen set consisting of all halting configurations. (This will be clopen if we encode configurations in such a way that the finite control state is listed first, since the halt state will then be the common prefix). Then the formula corresponding to $M$ and $w$ is $$ \psc_{m} \land \Big( \top \ltil P_{h} \Big).$$ This formula's interpretation is the set of configurations which are in $P_m$ (they are starting configurations of the UTM which encode $M$ as the TM to simulate and $w$ as the input), and which will eventually halt. Since the UTM just does whatever $M$ would do on $w$, if the formula above is satisfiable, $M$ halts on $w$, and if it is not satisfiable, $M$ does not halt on $w$. So if we could answer the satisfiability question for all formulas of the form above, we would have a way to solve the halting problem. This means that the satisiability problem for this family of formulae is r.e.-complete, so the dynamical system is universal under the definition!
+
+Similar arguments can be used to show that cellular automata and other models of computation capable of simulating Turing machines, when made into dynamical systems, satisfy our universality definition. What is interesting, though, is that this definition opens up the possibility that dynamical systems which are not immediately associated with Turing machines, might be universal. In fact, Delvenne et al. show that there does exist a system which is both chaotic and universal. They also show that certain properties of dynamical systems, like equicontinuity of the map, imply that a dynamical system cannot be universal.
 
 
 
