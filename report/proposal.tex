@@ -16,6 +16,8 @@
 \newcommand{\ltil}{\mathcal{U}}
 \newcommand{\psc}{\mathcal{P}}
 
+\renewcommand{\Nn}{\mathbb{N}}
+
 % Regular languages
 \newcommand{\lreg}{\ensuremath{\ms L_{\rm reg}}}
 
@@ -42,18 +44,19 @@
 
 
 \begin{abstract}
-  \textbf{Abstract goes here} Nullam eu ante vel est convallis
-  dignissim. Fusce suscipit, wisi nec facilisis facilisis, est dui
-  fermentum leo, quis tempor ligula erat quis odio. Nunc porta
-  vulputate tellus. Nunc rutrum turpis sed pede. Sed bibendum. Aliquam
-  posuere. Nunc aliquet, augue nec adipiscing interdum, lacus tellus
-  malesuada massa, quis varius mi purus non odio. Pellentesque
-  condimentum, magna ut suscipit hendrerit, ipsum augue ornare nulla,
-  non luctus diam neque sit amet urna. Curabitur vulputate vestibulum
-  lorem. Fusce sagittis, libero non molestie mollis, magna orci
-  ultrices dolor, at vulputate neque nulla lacinia eros. Sed id ligula
-  quis est convallis tempor. Curabitur lacinia pulvinar nibh. Nam a
-  sapien.
+  \textbf{Abstract} We describe two models of computation, DFAs and Turing machines, and how they can be represented as Turing machines. We also describe the computability hierarchy of languages and relate this to these models of computation. We discuss what it means for an arbitrary symbolic dynamical system to have computational universality (loosely defined as ``the computational power of an arbitrary Turing machine''), and motivate in detail one particular definition.
+  %Nullam eu ante vel est convallis
+  %dignissim. Fusce suscipit, wisi nec facilisis facilisis, est dui
+  %fermentum leo, quis tempor ligula erat quis odio. Nunc porta
+  %vulputate tellus. Nunc rutrum turpis sed pede. Sed bibendum. Aliquam
+  %posuere. Nunc aliquet, augue nec adipiscing interdum, lacus tellus
+  %malesuada massa, quis varius mi purus non odio. Pellentesque
+  %condimentum, magna ut suscipit hendrerit, ipsum augue ornare nulla,
+  %non luctus diam neque sit amet urna. Curabitur vulputate vestibulum
+  %lorem. Fusce sagittis, libero non molestie mollis, magna orci
+  %ultrices dolor, at vulputate neque nulla lacinia eros. Sed id ligula
+  %quis est convallis tempor. Curabitur lacinia pulvinar nibh. Nam a
+  %sapien.
 \end{abstract}
 
 
@@ -1033,7 +1036,7 @@ $\xmark$, the state is ``rejected.'' {\color{blue} In the case that
 \section{Computational Universality}
 
 A Universal Turing Machine is a Turing machine which can simulate any
-arbitrary Turing Machine. It takes as its input a Turing Machine code $\langle M \rangle$ (for turing machine $M$ we'll denote the code of $M$ by $\langle M \rangle$), and an input word $w$, and then simulates what $M$ would do on input $w$. Intuitively, any modern computer is a (finite memory) Universal Turing Machine: it can store arbitrary computer programs as data, and then run them on other data it stores or with user input.
+arbitrary Turing machine. It takes as its input a Turing Machine code $\langle M \rangle$ (for turing machine $M$ we'll denote the code of $M$ by $\langle M \rangle$), and an input word $w$, and then simulates what $M$ would do on input $w$. Intuitively, any modern computer is a (finite memory) Universal Turing Machine: it can store arbitrary computer programs as data, and then run them on other data it stores or with user input.
 
 In a similar vein, a system is {\it computationally universal} (or
 just {\it universal}) if it has the ability to simulate an arbitrary
@@ -1053,8 +1056,6 @@ simulating a Turing machine should mean:
 
 \end{itemize}
 
-\subsection*{Formally defining universality}
-
 We will follow the lead of Delvenne et al. [CITATION] in defining what
 it means for a dynamical system to be universal. Like them, we will
 consider only {\it symbolic} dynamical systems, that is, dynamical
@@ -1062,7 +1063,7 @@ systems on spaces consisting of infinite words made out of symbols
 drawn from a finite alphabet. We will need to do some spadework before
 we're ready to give the full definition.
 
-\subsubsection*{Spadework Part I - R.E.-completeness}
+\subsection{Spadework Part I - R.E.-completeness}
 
 Our ultimate goal is, given the code for a Turing machine $M$, and the
 input $w$, to ask a question about a particular dynamical system which
@@ -1113,7 +1114,7 @@ so they would be equivalent questions, which is what we are looking
 for. In fact, we will see that the r.e.-completeness of $QDS$ is
 exactly what we will require.
 
-\subsubsection*{Spadework Part II - Effective Symbolic Systems}
+\subsection{Spadework Part II - Effective Symbolic Systems}
 
 A symbolic set can be thought of as a set of words made from a finite alphabet $A$. We could express such a set as $(A \cup \{B\})^\Nn$, meaning the set of one-sided infinite words with characters which are either drawn from $A$ or are the ``blank'' symbol $B$. Finite words would then end be expressed as infinite words ending with an infinite tail of $B$s. But we could encode each element of $A \cup \{B\}$ with a binary sequence (with all encodings the same length), so any symbolic set can be encoded as a subset of the set $\{0,1\}^\Nn$ of one-sided infinite binary words.
 
@@ -1128,7 +1129,7 @@ Now we're ready to define the main dynamical systems we'll be working with. If $
 
 These requirements may seem a bit arbitrary, but they are made for a good reason. We will shortly be performing some operations on the clopen sets of $X$, and it turns out that, since $X$ is closed, these are exactly the intersections of $X$ with the clopen sets of $\{0,1\}^\Nn$, so we know this is a countable set. Requirement (ii) helps ensure that a Turing machine could list out these clopen sets without ever getting stuck checking if a particular clopen set of $\{0,1\}^\Nn$ has a nonempty intersection with $X$. And requirement (iii) foreshadows operations we will be doing on clopen sets.
 
-\subsubsection*{Spadework Part III - Temporal Logic}
+\subsection{Spadework Part III - Temporal Logic}
 
 Recall that we are looking for a way to ``ask questions'' about dynamical systems, whose answers will tell us something about the behavior of Turing machines. In order to be able to construct such questions, we will use subsets of state space to encode logical statements. Since we want to be able to make statements about the {\it eventual} behavior of the system, we will use a logical framework called temporal logic. Temporal logic includes all of the standard logical operators:
 \begin{itemize}
@@ -1166,11 +1167,14 @@ Then let $\psc_0, \psc_1, \psc_2, ...$ be a set of propositional symbols, which 
 \end{itemize}
 
 
-\subsubsection*{Universality}
+\subsection{Universality}
 
 Our spadework concluded, we're ready to say what it means for an effective dynamical system to be universal. We will use Delvenne et. al's precise definition here:
 
-``{\it An effective dynamical system is \emph{universal} if there is a recursive family of temporal formulae such that knowing whether a given formula of the family is satisfiable is an r.e.-complete problem.}''
+\begin{definition}[universality]
+	
+	``An effective dynamical system is \emph{universal} if there is a recursive family of temporal formulae such that knowing whether a given formula of the family is satisfiable is an r.e.-complete problem.''
+\end{definition}
 
 A ``recursive'' family of temporal formulae is a set of temporal formula for which membership in the set can be decided by a turing machine in finite time; this is essentially a regularity condition which prevents the family from being outlandishly defined.
 
@@ -1179,6 +1183,8 @@ To get a feel for what this definition means, and ensure that it is reasonable, 
 A configuration of the Universal Turing Machine, as with all Turing machines, is defined by finite control state and its tape contents, both of which can be encoded in a binary strings. So the configuration space of a UTM is a subset $X$ of $\{0,1\}^\Nn$, and the code for the UTM is some specific transition function on this space, $f$. Let's assume we are dealing with a a UTM that takes as input $\langle M \rangle, w, x$ with some special encoding of the delimiter ``$,$''. The machine first checks that its input is of this form, and halts immediately if it is not, and otherwise ignores $x$ and simulates $M$ on $w$. (We put the $x$ there so that we can have an arbitrary string on the end of our input, and the set of starting configurations given a specific choice of $M$ and $w$ will be a clopen set.)
 
 To show this dynamical system is universal, we're looking for recursive family of formula whose satisfiability is r.e.-complete. Consider all the possible pairs of turing machine encodings, $\langle M \rangle$, and inputs $w$. Given such a pair, let $P_m$ represent the clopen set of all UTM configurations in the starting state and tape contents beginning with ``$\langle M \rangle , w,$''. Let $P_{h}$ represent the clopen set consisting of all halting configurations. (This will be clopen if we encode configurations in such a way that the finite control state is listed first, since the halt state will then be the common prefix). Then the formula corresponding to $M$ and $w$ is $$ \psc_{m} \land \Big( \top \ltil P_{h} \Big).$$ This formula's interpretation is the set of configurations which are in $P_m$ (they are starting configurations of the UTM which encode $M$ as the TM to simulate and $w$ as the input), and which will eventually halt. Since the UTM just does whatever $M$ would do on $w$, if the formula above is satisfiable, $M$ halts on $w$, and if it is not satisfiable, $M$ does not halt on $w$. So if we could answer the satisfiability question for all formulas of the form above, we would have a way to solve the halting problem. This means that the satisiability problem for this family of formulae is r.e.-complete, so the dynamical system is universal under the definition!
+
+It may seem strange that we introduced the useless input $x$ into our dynamical system. This was not in fact necessary to make the dynamical system universal, but we did it to make explanation easier. The reason this made our lives easier our formulas encode statements about clopen sets, but we wanted to talk about a particular initial configuration, so we made the machine clearly treat all the elements in the clopen set as the same input. A reasonable question would be, why make our definition involve clopen sets at all, rather than encode single configurations with formulas? In fact it is possible to do rewrite the definition without clopen sets, using only single points, but if we did so, then the shift map on $\{0,1\}^\Nn$ would be considered universal. This is because we could encode an infinite computation process in an infinite binary string, and then ask whether some number of shifts brings us to the halting configuration. The fundamental issue is that encoding with points allows points to store an infinite amount of information, whereas in real systems configurations can only store finite information. Because we are interested in the map itself performing computation rather than the chosen points, we require clopen sets instead.
 
 Similar arguments can be used to show that cellular automata and other models of computation capable of simulating Turing machines, when made into dynamical systems, satisfy our universality definition. What is interesting, though, is that this definition opens up the possibility that dynamical systems which are not immediately associated with Turing machines, might be universal. In fact, Delvenne et al. show that there does exist a system which is both chaotic and universal. They also show that certain properties of dynamical systems, like equicontinuity of the map, imply that a dynamical system cannot be universal.
 
