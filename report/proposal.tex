@@ -442,19 +442,9 @@ $s_0$, $s_1$:
 Suppose now that $\sigma_{i_1} = \sigma_{j_1}$. We'll call this shared
 symbol $\sigma_1$. Observe that feeding either $s_0$ or $s_1$ into
 some DFA $M$ yields identical behavior in the first step:
-\[
-  \delta(q_0, \tikzmarknode{si1}{\sigma_{i_1}})
-  = \delta(q_0, \tikzmarknode{s1}{\sigma_1})
-  = \delta(q_0, \tikzmarknode{sj1}{\sigma_{j_1}})
-\]
-\begin{tikzpicture}[overlay, remember picture]
-  \draw (si1) -- ++(0, -.25) node[coordinate, at end] (a) {};
-  \draw (s1) -- ++(0, -.25) node[coordinate, at end] (b) {};
-  \draw (sj1) -- ++(0, -.25) node[coordinate, at end] (c) {};
-  \draw (a) -- (b) -- (c);
-  \draw (b) -- ++(0,-.25) node[at end, below] {\scriptsize all equal};
-\end{tikzpicture}
-
+\begin{center}
+  \includegraphics{figures/labeled-equation.pdf}
+\end{center}
 Hence in both cases, the machine enters some new state $q'$. But now,
 suppose $\sigma_{i_2} \neq \sigma_{j_2}$, and further that $\delta(q',
 \sigma_{i_2}) \neq \delta(q', \sigma_{j_2})$. Then $M$ will actually
