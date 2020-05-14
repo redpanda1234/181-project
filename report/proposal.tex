@@ -44,7 +44,14 @@
 
 
 \begin{abstract}
-  \textbf{Abstract} We describe two models of computation, DFAs and Turing machines, and how they can be represented as Turing machines. We also describe the computability hierarchy of languages and relate this to these models of computation. We discuss what it means for an arbitrary symbolic dynamical system to have computational universality (loosely defined as ``the computational power of an arbitrary Turing machine''), and motivate in detail one particular definition.
+  \textbf{Abstract} We describe two models of computation, DFAs and
+  Turing machines, and how they can be represented as dynamical
+  systems. We also describe the computability hierarchy of languages
+  and relate this to these models of computation. We discuss what it
+  means for an arbitrary symbolic dynamical system to have
+  computational universality (loosely defined as ``the computational
+  power of an arbitrary Turing machine''), and motivate in detail one
+  particular definition.
   %Nullam eu ante vel est convallis
   %dignissim. Fusce suscipit, wisi nec facilisis facilisis, est dui
   %fermentum leo, quis tempor ligula erat quis odio. Nunc porta
@@ -790,7 +797,7 @@ possible values for the blue portion itself.
 \begin{proposition}\label{prop:product-metrizable}% {\color{blue}
     % reindex me!}
   For each $k \in \ZZ$, let $(X_k, \ms T_k)$ be a discrete topological
-  space. Then $X = \prod_{n\in\NN} X_k$ is metrizable, with metric
+  space. Then $X = \prod_{k\in\ZZ} X_k$ is metrizable, with metric
   given by
   \[
     d(\pn{x_i}_{i \in \ZZ}, \pn{y_i}_{i \in \ZZ}) =
@@ -800,14 +807,76 @@ possible values for the blue portion itself.
     \end{cases} \qedhere
   \]
 \end{proposition}
+\begin{sproof}
+  First, we verify this is a metric. Let $x,y,z \in X$ be arbitrarily
+  chosen. Then
+  \begin{itemize}
+    \item By definition, $d(x,y) \geq 0$;
+    \item By definition, $d(x,y) = 0 \iff x = y$; and
+    \item By definition, $d(x,y) = d(y,x)$.
+  \end{itemize}
+  It remains to show the triangle inequality. Let $n_{(x,z)}$ be the
+  first index at which $x$ and $z$ differ, and similarly for
+  $n_{(x,y)}$, $n_{(y,z)}$.
+
+  \noindent \textbf{Claim:} At least two of the $n$'s have to be
+  equal. Further, if exactly two are equal, then they are smaller than
+  the third.
+
+  \noindent \textbf{Proof of Claim:} Suppose, to obtain a
+  contradiction, that none of the $n$'s are equal. Then they are
+  strictly ordered. WLOG, suppose $n_{(x,z)} < n_{(x,y)} < n_{(y,z)}$.
+  Then by definition of $n_{(x,z)}$, we have
+  \[
+    x_{n_{(x,z)}} \neq z_{n_{(x,z)}},
+  \]
+  but note, by definition of $n_{(y,z)}$, $y,z$ cannot differ before
+  $n_{(y,z)}$. Hence, $n_{(x,z)} < n_{(y,z)}$ implies
+  \[
+    y_{n_{(x,z)}} = z_{n_{(x,z)}}
+  \]
+  thus $y_{n_{(x,z)}} \neq x_{n_{(x,z)}}$ as well. But this is a
+  contradiction, $n_{(x,z)} < n_{(x,y)}$! It follows that at least two
+  of the $n$'s have to be equal.
+
+  To show that \np{in the case where exactly two are equal they are
+    smaller than the third}, note that the same contradiction proof
+  applies for $n_{(x,z)} < n_{(x,y)} = n_{(y,z)}$. Anyways, we now
+  finally establish the triangle inequality. We have two subcases.
+  \begin{enumerate}
+    \item Suppose that all three of the $n$'s are equal. Denote their
+      common value by $N$. Then
+      \[
+      2^{-N} < 2^{-N} + 2^{-N},
+      \]
+      as desired.
+    \item Else, suppose that exactly two of the $n$'s are equal.
+      Denote the value of the smaller two by $N_{\rm small}$, and that
+      of the bigger one by $N_{\rm big}$. Observe that both
+      \[
+      2^{-N_{\rm small}} < 2^{-N_{\rm small}} + 2^{-N_{\rm big}}
+      \]
+      and
+      \[
+      2^{-N_{\rm big}} < 2^{-N_{\rm small}} + 2^{-N_{\rm small}},
+      \]
+      so no matter which $n$ is which, we get the triangle inequality.
+    % \item Suppose that exactly two of the $n$'s are equal. Denote
+    %   their common value by $N_{\rm two}$, and the value of the other
+    %   $n$ by $N_{\rm one}$. We want to show that $N_{\rm two} < N_{\rm
+    %   one}$.
+  \end{enumerate}
+  Hence, we see that the proposed metric \emph{is} indeed a metric.
+
+  Lastly: To see that this metric generates the product topology, note
+  that taking sufficiently small radii, the open balls in this metric
+  yield the exact same base as in \cref{prop:prefix-basis}. Hence, we
+  see the product topology is metrizable with the given metric.
+\end{sproof}
 \begin{remark}
   Note that if $\Sigma = \set{0,1}$, this is the $p$-adic metric on
   $\set{0,1}^{\ZZ}$.
 \end{remark}
-\begin{sproof}
-  Note that the open balls in this metric yield the exact same base as
-  in \cref{prop:prefix-basis}.
-\end{sproof}
 OK! \emph{Finally} we can summarize all of this in terms of what it
 means for our actual set of interest, $X_{\rm unrest}$. The upshot is
 as follows.
@@ -829,11 +898,9 @@ as follows.
 
 \subsection{Finally! Converting to a Dynamical System}
 Alright! Now, we can \emph{finally} get to turning our DFAs into
-dynamical systems.%  {\color{blue} Make sure that the subspace topology
-  % explanation exists.}
-Let $Q$ be our state set, and let $\Sigma$ be our alphabet. As always
-we take $\epsilon$ to be the empty string. Recall, we define $X_{\rm
-  DFA}$
+dynamical systems. Let $Q$ be our state set, and let $\Sigma$ be our
+alphabet. As always we take $\epsilon$ to be the empty string. Recall,
+we define $X_{\rm DFA}$
 \[
   X_{\rm DFA} = \set{(q, \sigma) \in X_{\rm unrest} \MID \sigma =
     \pn{\epsilon_{-\infty}^0 \cdot \sigma_1 \sigma_2 \cdots \sigma_n
@@ -896,7 +963,7 @@ Neato!!!!!!!!!!!!!! Now we can define the whole thing:
   a homeomorphism. We chose not to do so, since being agnostic about
   prior state is more in keeping with our intuition about DFAs.
 \end{remark}
-Anyways, the big-picture takeaways are as follows:
+The big-picture takeaways are as follows:
 \begin{itemize}
   \item Any valid initial condition for $t = 0$ must have $q = q_0$.
   \item The \emph{fixed points} of $(X_{\rm DFA}, T, \Phi)$ occur
@@ -906,66 +973,56 @@ Anyways, the big-picture takeaways are as follows:
     \]
     which reflects the intuition that the DFA performs no computation on
     the empty string. That is, ``halting states of the DFA \texttt{==}
-    fixed points of the Dynamical System''
-  \item {\color{red} anything else? }
+    fixed points of the Dynamical System.''
+  % \item
 \end{itemize}
 The constructions for the next two layers (\emph{context-free} and
-\emph{context-sensitive})
-
-
-
-% Note, in the case $I$ is countable and all of our $X_i$'s have the
-% discrete topology, the product topology is metrizable by
-% \[
-%   d(\pn{x_i}_{i=1}^\infty, \pn{y_i}_{i=1}^\infty)
-%   =
-%   \begin{cases}
-%     0 & \text{if for all $i$, } x_i = y_i, \\
-%     2^{-k} & \text{$k$ is first index s.t. } x_k \neq
-%     y_k.
-%   \end{cases}
-% \]
-% This is the case with our set of \emph{unrestricted configurations}
-% $X$. From here on, assume $X$ has been endowed with this topology.
-
-
-% \begin{proposition}
-%   In the product topology on $X$, our cylinder sets are of the form
-%   \begin{align*}
-%     \pi^{-1}_i(\set{\sigma_1, \ldots, \sigma_k})
-%     &= \{
-%       \pn{x_1, x_2, \ldots, x_{i-1}, {\color{red}\sigma_1}, x_{i+1},
-%       \ldots} \\
-%     &= \phantom{\{} \pn{x_1, x_2, \ldots, x_{i-1},
-%       {\color{red}\sigma_2}, x_{i+1}, \ldots} \\
-%     &= \hspace{8em} \vdots \\
-%     &= \phantom{\{} \pn{x_1, x_2, \ldots, x_{i-1},
-%       {\color{red}\sigma_k}, x_{i+1}, \ldots}\}
-%   \end{align*}
-% \end{proposition}
-
-
+\emph{context-sensitive}) are somewhat painful to encode, so we'll
+omit them and jump straight to the dynamical systems for
+\emph{recursively enumerable} languages: Turing machines.
 
 \subsection{Turing Machines}
-A \emph{Turing machine} (often TM for short) is an abstract model of
-computation that allows us to encode computer programs as collections
-of sets with well-defined maps. There are many ``equivalent''
-definitions for Turing machines;\footnote{Here, ``equivalent'' means
-  that the models of computation they define are equally powerful.
-  That is, given two distinct definitions $D_0, D_1$ for Turing
-  machines, the behavior of any machine defined with $D_0$ can be
-  simulated using a machine defined by $D_1$ and vice versa.} we'll
-give the canonical one first and save the more
-dynamical-systems-flavored version for later.
+Like a DFA, a \emph{Turing machine} (often TM for short) is an
+abstract model of computation that allows us to encode an algorithmic
+process as collections of sets with well-defined maps. Turing machines
+are named for \emph{Alan Turing}, a brilliant mathematician who
+suffered horrible injustices because of his sexuality.
+
+There are many ``equivalent'' definitions for Turing
+machines;\footnote{Here, ``equivalent'' means that the models of
+  computation they define are equally powerful. That is, given two
+  distinct definitions $D_0, D_1$ for Turing machines, the behavior of
+  any machine defined with $D_0$ can be simulated using a machine
+  defined by $D_1$ and vice versa.} we'll give a slightly-modified
+version of the canonical definition.
+\begin{remark}
+  For those in the know: As far as we can tell, in order to turn TM's
+  into dynamical systems, it's necessary that we include \emph{two}
+  ``blank'' characters. The first, $\epsilon$, represents the
+  \emph{empty string}, and will denote the state for an uninitialized
+  tape cell. Our TM will not be allowed to write $\epsilon$ characters
+  to the tape. In fact, upon seeing one, our TM will be required to
+  immediately replace it with a $\blank$, which we call the
+  \emph{blank character}. This seems to be the only way to get our
+  $0$-manifold condition.
+ % \emph{both} $\Sigma$ and
+  % $\Gamma$ (defined below) contain some form of ``blank'' character.
+  % In the case of $\Sigma$, we denote this as the usual $\epsilon$, and
+  % think of $\epsilon$ as being the \emph{empty string}. For gamma,
+  % we'll include a $\blank \in \Gamma$, which we call the \emph{blank
+  %   character} --- essentially, the difference will be that our
+  % machine \emph{cannot} write $\epsilon$'s, but it can write
+  % $\blank$'s.
+\end{remark}
 \begin{definition}[Turing Machine]
-  A \emph{Turing machine} is a {\color{red} 5}-tuple
+  A \emph{Turing machine} is an 8-tuple
   \[
-    M = \pn{Q, F, \Gamma, \Sigma, \delta}
+    M = \pn{Q, F, \Gamma, \Sigma, \delta, \epsilon, \blank, q_0}
   \]
   such that the following conditions hold:
   \begin{enumerate}[label=\arabic*)]
-    \item $Q, F, \Gamma, \Sigma$ and $F$ are finite sets. Note, we
-      choose the following naming conventions:
+    \item $Q, F, \Gamma, \Sigma$ and $F$ are finite sets, with the
+      following naming conventions:
       \begin{enumerate}[label=\roman*)]
         \item $Q$ is called the set of \emph{states} for $M$,
         \item $F = \set{\cmark, \xmark}$ is called the set of
@@ -974,36 +1031,53 @@ dynamical-systems-flavored version for later.
         \item $\Gamma$ is called the \emph{work alphabet}, and
         \item $\Sigma$ is called the \emph{input alphabet};
       \end{enumerate}
-    \item $F \subseteq Q$ and $\Sigma \subseteq \Gamma$;
-    \item $Q$ contains a distinguished element $q_0$, called the
+    \item $\epsilon$ (called the \emph{empty string}) is neither an
+      element of $\Sigma$ nor of $\Gamma$;
+    \item $\blank \in \Gamma$ is a distinguished element
+      called the \emph{blank character}, and we have $\blank \not \in
+      \Sigma$;
+    \item $q_0 \in Q$ is a distinguished element called the
       \emph{start state} or \emph{initial state};
-    \item $\Gamma$ contains a distinguished element $\blank$ called the
-      \emph{blank character} (we require $\blank \not \in \Sigma$);
+    \item We have $F \subseteq Q$ and $\Sigma \subseteq
+      \Gamma\setminus \set{\blank}$; and
     \item $\delta$ (called the \emph{transition function}) has the
       following properties:
       \begin{enumerate}[label=\roman*)]
         \item $\delta$ is a partial function $\delta : (Q \setminus F)
-          \times \Gamma \nrightarrow Q \times \Gamma \times
-          \set{L,R}$. Note the inclusion of the word \emph{partial}
-          --- in general we do not require $\delta$ to be defined on
-          all of $(Q \setminus F) \times \Gamma$.
-        \item $L, R$ are understood as ``shift'' directions, as
-          explained below. \qedhere
+          \times \Gamma \cup \set{\epsilon} \nrightarrow Q \times
+          \Gamma \times \set{L,R}$,\footnote{Note the inclusion of the
+          word \emph{partial} --- in general we do not require
+          $\delta$ to be defined on all of $(Q \setminus F) \times
+          \Gamma$.} where $L, R$ are understood as ``shift''
+          directions, and finally
+        \item For all $q \in Q$, we have $\delta(q, \epsilon) = (q',
+          \blank, \mrm{Dir})$. \qedhere
       \end{enumerate}
   \end{enumerate}
 \end{definition}
 We think of Turing machines as operating on an infinite \emph{work
   tape}, where the cells of the tape each represent a symbol from the
-alphabet $\Gamma$.\footnote{Formally, the addition of the tape
-  requires using an infinite tuple of elements from
-  $\prod_{i=-\infty}^\infty \Gamma$, with all but finitely-many
-  entries non-blank.} One can think of this tape as representing the
-``memory'' of the TM.
+alphabet $\Gamma \cup \set{\epsilon}$.\footnote{Beyond requiring
+  $\blank \in \Gamma$, $\blank \not\in \Sigma$, we don't actually need
+  $\Gamma$, $\Sigma$ to be distinct. Doing so is mainly a matter of
+  convenience. All we really need out of $\Gamma$ is the ability to
+  put down a \emph{delimiter} character that helps us distinguish
+  between separate blocks in our tape. This is important in being able
+  to use the tape as a form of ``memory'' for the machine. Note, even
+  if $\Sigma$ is a unary alphabet like $\Sigma = \set{0}$, we can use
+  the blank to create \emph{logical} characters that function as if
+  they're part of an expanded glyph set (we'll denote these by
+  $\mrm{char}_L$, $L$ for ``logical''). E.g., we could have
+  $\np{\blank_L = \blank\blank}$, $\np{0_L = 0\blank}$, $\np{1_L =
+    00\blank}$, $\np{2_L = 000\blank}2$, and so on. All of these
+  parsing rules can be treated in state.} One can think of this tape
+as representing the ``memory'' of the TM.
 
 The tape is initialized with a finite word $\sigma = \sigma_1 \sigma_2
-\cdots \sigma_n$ representing the input to our program, while the rest
-of the tape is filled with $\blank$ characters. The TM initializes in
-the \emph{start state}, with the \emph{tape head} (drawn with an
+\cdots \sigma_n$ where the $\sigma_i \in \Sigma$ (this represents the
+input to our program), while the rest of the tape is filled with
+$\epsilon$ characters (we'll draw these lowered). The TM initializes
+in the \emph{start state}, with the \emph{tape head} (drawn with an
 $\uparrow$ in the below) on $\sigma_1$. We think of the tape head as
 ``pointing'' to whatever character the TM is reading currently.
 \begin{figure}[H]
@@ -1019,7 +1093,7 @@ current tape, updating its state to $q_1$, and moving one space to the
 right on the tape.
 \begin{figure}[H]
   \centering
-  \includegraphics{figures/tm-one-step-later.pdf}
+  \includegraphics[scale=.7]{figures/tm-one-step-later.pdf}
   \caption{Turing machine after performing a single step. Differences
     shown in {\color{blue} blue}.}
 \end{figure}
@@ -1027,10 +1101,81 @@ At each step of the computation, the Turing machine performs a similar
 process: Read the tape, rewrite and move as dictated by $\delta$, and
 then repeat. If the Turing machine reaches the state $\cmark$, then it
 halts and the input is said to be ``accepted.'' If it reaches
-$\xmark$, the state is ``rejected.'' {\color{blue} In the case that
-  the machine never halts, we treat this as a form of rejection.}
+$\xmark$, the state is ``rejected.'' In the case that the machine
+never halts, we treat this as a form of rejection.
 
 
+
+
+Because of the groundwork we established in our rumpus through DFAs
+and the product topology, a dynamical encoding of Turing machines will
+follow fairly naturally. Compared to the DFA case, there are two
+conditions we'll loosen: First, we'll allow for a more expanded set of
+``configurations'' than just $X_{\rm DFA}$. Second, the evolution map
+$\Phi$ will allow for more complicated behavior than just scanning
+linearly from left-to-right.
+
+We treat these differences in order. First, we define $X_{\rm
+  unrest}$:
+\[
+  X_{\rm unrest} = Q \times \pn{\prod_{i \in \ZZ} \Gamma \cup
+    \set{\epsilon}}.
+\]
+Note, the correspondence with the $X_{\rm unrest}$ definition given in
+discussing DFAs can be established by taking $\Gamma = \Sigma$.
+
+As before, we now restrict $X_{\rm unrest}$ to configurations for
+which all but finitely many characters on the tape are $\epsilon$. Let
+$X_{\rm TM}$ be given by
+\[
+  X_{\rm TM} = Q \times \bigcup_{\substack{k_1, k_2 \in \ZZ \\ k_1
+      \leq k_2}} \set{\epsilon_{-\infty}^{k_1}\cdot \gamma_1 \cdot
+    \gamma_2 \cdots \gamma_n \cdot \epsilon_{k_2}^\infty},
+\]
+where $\gamma_1, \gamma_2, \ldots, \gamma_n \in \Gamma$ are freely
+chosen.%  except for \emph{one} requirement:
+% \begin{itemize}
+%   \item There exists $\ell_{\rm sep} \in \NN$ such that the
+%     longest string of consecutive blank characters in $\gamma_1 \cdot
+%     \gamma_2 \cdots \gamma_n$ has length \emph{at most} $\ell_{\rm
+%     sep}$.
+% \end{itemize}
+% The topological motivation for $\ell_{\rm sep}$ is that it forces our
+% state space to be a $0$-manifold. Fascinatingly, this requirement
+% translates loosely to stipulating that our Turing machine be able to
+% ``determine its configuration'' in finite time, which is important if
+% we want to be able to perform computations deterministically.
+
+We now define the set of valid initial conditions: Let $X_{\rm TM_0}$
+be given by
+\[
+  X_{\rm TM_0} = \set{q_0} \times \bigcup_{\substack{k \in \ZZ^{> 0}}}
+  \set{\epsilon_{-\infty}^{0} \cdot \sigma_1 \cdot \sigma_2 \cdots
+    \sigma_{k} \cdot \epsilon_{k+1}^\infty},
+\]
+where each $\sigma \in \Sigma$. As usual, we endow both $X_{\rm TM}$
+and $X_{\rm TM_0}$ with the subspace topology from $X_{\rm unrest}$.
+Then
+\begin{proposition}[0-manifold-ness]
+  Under the subspace topology from $X_{\rm unrest}$, both $X_{\rm
+    TM_0}$ and $X_{\rm TM}$ are 0-manifolds (discrete spaces).
+\end{proposition}
+\begin{sproof}
+  It suffices to prove the claim for $X_{\rm TM}$, since $X_{\rm TM_0}
+  \subseteq X_{\rm TM}$ and the subspace of a discrete space is
+  discrete. To that end: Let $(q, \gamma) \in X_{\rm TM}$ be
+  arbitrary. Suppose $\gamma$ is of the form
+  \[
+    \sigma = \epsilon_{-\infty}^{k_1} \cdot \gamma_1 \cdot \gamma_2
+    \cdots \gamma_n \cdot \epsilon_{k_2}^\infty.
+  \]
+  Then as in the case with $X_{\rm DFA}$, let $\varepsilon = 2^{-n}$,
+  and note that
+  \[
+    B_\varepsilon(\gamma) = \set{\gamma}.
+  \]
+  It follows that $X_{\rm TM}$ is a $0$-manifold.
+\end{sproof}
 
 
 \section{Computational Universality}
