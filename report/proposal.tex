@@ -1104,19 +1104,21 @@ halts and the input is said to be ``accepted.'' If it reaches
 $\xmark$, the state is ``rejected.'' In the case that the machine
 never halts, we treat this as a form of rejection.
 
+We'll now move to encoding this idea in a dynamical system. Because of
+the groundwork we established in our rumpus through DFAs and the
+product topology, this will follow fairly naturally. There's only one
+major recalibration we have to make, which is that it's more natural
+to think about the tape sliding around underneath the tape head as
+opposed to thinking about the tape head as moving over a static tape.
 
+% Compared to the DFA case, there are two conditions we'll loosen:
+% First, we'll allow for a more expanded set of ``configurations'' than
+% just $X_{\rm DFA}$. Second, the evolution map $\Phi$ will allow for
+% more complicated behavior than just scanning linearly from
+% left-to-right.
 
-
-Because of the groundwork we established in our rumpus through DFAs
-and the product topology, a dynamical encoding of Turing machines will
-follow fairly naturally. Compared to the DFA case, there are two
-conditions we'll loosen: First, we'll allow for a more expanded set of
-``configurations'' than just $X_{\rm DFA}$. Second, the evolution map
-$\Phi$ will allow for more complicated behavior than just scanning
-linearly from left-to-right.
-
-We treat these differences in order. First, we define $X_{\rm
-  unrest}$:
+% We treat these differences in order.
+First, we define $X_{\rm unrest}$:
 \[
   X_{\rm unrest} = Q \times \pn{\prod_{i \in \ZZ} \Gamma \cup
     \set{\epsilon}}.
@@ -1126,14 +1128,24 @@ discussing DFAs can be established by taking $\Gamma = \Sigma$.
 
 As before, we now restrict $X_{\rm unrest}$ to configurations for
 which all but finitely many characters on the tape are $\epsilon$. Let
-$X_{\rm TM}$ be given by
+$X_{\rm TM}$ be given by (note, the ``$X_{\rm TM}=$'' wouldn't fit on
+the line)
 \[
-  X_{\rm TM} = Q \times \bigcup_{\substack{k_1, k_2 \in \ZZ \\ k_1
-      \leq k_2}} \set{\epsilon_{-\infty}^{k_1}\cdot \gamma_1 \cdot
-    \gamma_2 \cdots \gamma_n \cdot \epsilon_{k_2}^\infty},
+  % X_{\rm TM} =
+  Q \times \pn{\set{\epsilon_{-\infty}^{\infty}} \cup
+    \bigcup_{\substack{k_1, k_2 \in \ZZ \\ k_1 \leq 0 \leq k_2}}
+    \set{\epsilon_{-\infty}^{k_1-1}\cdot \gamma_{k_1} \cdot
+      \gamma_{k_1 + 1} \cdots \gamma_{k_2} \cdot
+      \epsilon_{k_2+1}^\infty}},
 \]
-where $\gamma_1, \gamma_2, \ldots, \gamma_n \in \Gamma$ are freely
-chosen.%  except for \emph{one} requirement:
+where $k_1 \leq 0 \leq k_2$, and $\gamma_{k_1}, \gamma_{k_1 + 1},
+\ldots, \gamma_{k_2} \in \Gamma$ are freely chosen. The $k_1 \leq
+0\leq k_2$ condition is what will encode our idea that the tape-head
+stays ``fixed'' at $0$. % Observe, the requirement $k_1 \leq 0 \leq k_2$
+% requires that we always have one of the $\gamma$'s labeled with
+% $\gamma_0$.
+
+% except for \emph{one} requirement:
 % \begin{itemize}
 %   \item There exists $\ell_{\rm sep} \in \NN$ such that the
 %     longest string of consecutive blank characters in $\gamma_1 \cdot
@@ -1149,13 +1161,14 @@ chosen.%  except for \emph{one} requirement:
 We now define the set of valid initial conditions: Let $X_{\rm TM_0}$
 be given by
 \[
-  X_{\rm TM_0} = \set{q_0} \times \bigcup_{\substack{k \in \ZZ^{> 0}}}
-  \set{\epsilon_{-\infty}^{0} \cdot \sigma_1 \cdot \sigma_2 \cdots
-    \sigma_{k} \cdot \epsilon_{k+1}^\infty},
+  % X_{\rm TM_0} =
+  \set{q_0} \times \pn{\set{\epsilon_{-\infty}^\infty} \cup
+    \bigcup_{\substack{k \in \ZZ^{\geq 0}}}
+    \set{\epsilon_{-\infty}^{-1} \cdot \sigma_0 \cdot \sigma_1 \cdots
+      \sigma_{k} \cdot \epsilon_{k+1}^\infty}},
 \]
-where each $\sigma \in \Sigma$. As usual, we endow both $X_{\rm TM}$
+where each $\sigma_i \in \Sigma$. As usual, we endow both $X_{\rm TM}$
 and $X_{\rm TM_0}$ with the subspace topology from $X_{\rm unrest}$.
-Then
 \begin{proposition}[0-manifold-ness]
   Under the subspace topology from $X_{\rm unrest}$, both $X_{\rm
     TM_0}$ and $X_{\rm TM}$ are 0-manifolds (discrete spaces).
@@ -1166,16 +1179,72 @@ Then
   discrete. To that end: Let $(q, \gamma) \in X_{\rm TM}$ be
   arbitrary. Suppose $\gamma$ is of the form
   \[
-    \sigma = \epsilon_{-\infty}^{k_1} \cdot \gamma_1 \cdot \gamma_2
-    \cdots \gamma_n \cdot \epsilon_{k_2}^\infty.
+    \gamma = \epsilon_{-\infty}^{k_1-1} \cdot \gamma_{k_1} \cdot
+    \gamma_{k_1 + 1} \cdots \gamma_{k_2} \cdot \epsilon_{k_2}^\infty.
   \]
-  Then as in the case with $X_{\rm DFA}$, let $\varepsilon = 2^{-n}$,
-  and note that
+  Let $n = \max\set{\abs{k_1}, \abs{k_2}}$, and let $\varepsilon =
+  2^{-(n+1)}$. Note that our choice of $\varepsilon$ restricts us to
+  strings $\gamma'$ of the form
   \[
-    B_\varepsilon(\gamma) = \set{\gamma}.
+    \gamma' = \ms s_0 \cdot \np{\epsilon_{-(n+1)}^{k_1 - 1} \cdot
+      \gamma_{k_1} \cdot \gamma_{k_1 + 1} \cdots \gamma_{k_2} \cdot
+      \epsilon_{k_2}^{n+1}} \cdot \ms s_1
   \]
-  It follows that $X_{\rm TM}$ is a $0$-manifold.
+  where $\ms s_0, \ms s_1$ are arbitrary strings. By definition of
+  $X_{\rm TM}$, the only possible string of this form is $\gamma$
+  itself, hence we have
+  \[
+    B_\varepsilon(\gamma) = \set{\gamma},
+  \]
+  hence the set of admissible tape states is discrete. Since we endow
+  $Q$ with the discrete topology, and the finite product of two
+  discrete spaces is discrete, it follows that $X_{\rm TM}$ is
+  discrete, as desired!
+% $\epsilon$ characters on both sides of
+%   $\gamma$, our $\sigma$ is uniquely determined. It follows that
+%   $X_{\rm TM}$ is a $0$-manifold, as desired.
 \end{sproof}
+We have our phase space, now for the rest. As usual, let $T = \NN$,
+and interpret 1 step in $T$ as performing 1 step of the computation.
+We now construct the evolution map $\Phi$.
+
+First: In the edge case where the current character under the tape
+head (i.e.\ at the 0-index) is the $\epsilon$, we define
+\begin{align*}
+  \Phi(1, (q, s_{\rm left} \cdot \epsilon \cdot s_{\rm right})) =
+  (q, s_{\rm left} \cdot \blank \cdot s_{\rm right}).
+\end{align*}
+Note, $\cdot \blank \cdot$ is not \emph{just} a slick new emoticon,
+it's also meant to denote ``concatenate a blank with the things on
+either side.''
+
+Now the other case: Let $(q, s) \in X_{\rm TM}$ where
+\[
+  s = \epsilon_{-\infty}^{k_1-1} \cdot \gamma_{k_1} \cdot \gamma_{k_1
+    + 1} \cdots \gamma_{k_2} \cdot \epsilon_{k_2+1}^\infty,
+\]
+and $k_1 \leq 0 \leq k_2$. Also let $(q', {\color{blue} \gamma'_0},
+\mrm{Dir}) = \delta(q, \gamma_0)$. Let
+\[
+  s' = \epsilon_{-\infty}^{k_1 - 1} \cdot \gamma_{k_1} \cdot
+  \gamma_{k_1 + 1} \cdots \gamma_{-1} \cdot {\color{blue} \gamma'_0}
+  \cdot \gamma_1 \cdots \gamma_{k_2} \cdot \epsilon_{k_2+1}^\infty
+\]
+let $s'_{\rm left}$ be a copy of $s'$ shifted to the left, and
+$s'_{\rm right}$ be a copy shifted to the right. In both cases, if
+shifting lands the $0$-index on an $\epsilon$, replace it with a
+$\blank$. Then define
+\[
+  \Phi(1, (q, s)) =
+  \begin{cases}
+    \pn{q', s'_{\rm left}} & \text{ if Dir $ = $ Left, and}\\
+    \pn{q', s'_{\rm right}} & \text{ if Dir $ = $ Right}.
+  \end{cases}
+\]
+This gives us a full dynamical encoding of Turing machines!
+
+
+
 
 
 \section{Computational Universality}
