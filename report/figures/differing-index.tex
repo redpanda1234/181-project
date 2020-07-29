@@ -1,0 +1,58 @@
+\documentclass{standalone}
+\usepackage{tikz}
+
+\begin{document}
+\begin{tikzpicture}
+  \def\xcol{blue!60!white}
+  \def\ycol{green!85!black}
+  \def\zcol{red!65!white}
+
+  \pgfmathsetmacro{\xzeromax}{7}
+  \pgfmathsetmacro{\yzeromax}{9}
+  \pgfmathsetmacro{\zzeromax}{5}
+
+  % naming scheme == <variable> <zero> <max> <plus>
+  \pgfmathsetmacro{\xzmp}{\xzeromax+1}
+  \pgfmathsetmacro{\yzmp}{\yzeromax+1}
+  \pgfmathsetmacro{\zzmp}{\zzeromax+1}
+
+  % naming scheme == <variable> <zero> <max> <plus>
+  \pgfmathsetmacro{\xzmpp}{\xzmp+1}
+  \pgfmathsetmacro{\yzmpp}{\yzmp+1}
+  \pgfmathsetmacro{\zzmpp}{\zzmp+1}
+
+
+
+  \pgfmathsetmacro{\maxmax}{13}
+
+
+  \node[\xcol] (xl) at (0, 1) {\Large $x:$};
+  \node[yshift=-1.5pt, \ycol] (yl) at (0, 0) {\Large $y:$};
+  \node[\zcol] (zl) at (0, -1) {\Large $z:$};
+
+  % Draw the matching 1's
+  \foreach \n in {1, 2, ..., \xzeromax}{
+    \node[\xcol] (x\n) at (\n, 1) {\large $0$};
+  }
+  \foreach \n in {1, 2, ..., \yzeromax}{
+    \node[\ycol] (y\n) at (\n, 0) {\large $0$};
+  }
+  \foreach \n in {1, 2, ..., \zzeromax}{
+    \node[\zcol] (z\n) at (\n, -1) {\large $0$};
+  }
+
+  \foreach \xval/\yval in {\xzmp/1, \yzmp/0, \zzmp/-1}{
+    \node () at (\xval, \yval) {$1$};
+  }
+
+  \foreach \maxto/\yval in {\xzmpp/1, \yzmpp/0, \zzmpp/-1}{
+    \foreach \n in {\maxto, ..., \maxmax}{
+      \pgfmathsetmacro{\thislabel}{random(0,1)}
+      \node[gray!70!white] () at (\n, \yval) {$\thislabel$};
+    }
+  }
+
+
+
+\end{tikzpicture}
+\end{document}

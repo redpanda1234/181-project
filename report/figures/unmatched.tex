@@ -1,0 +1,54 @@
+\documentclass{standalone}
+\usepackage{tikz}
+\begin{document}
+\begin{tikzpicture}
+  \def\xcol{blue!60!white}
+  \def\ycol{green!85!black}
+  \def\zcol{red!65!white}
+  \node[\xcol] (xl) at (0, 1) {\Large $x:$};
+  \node[yshift=-1.5pt, \ycol] (yl) at (0, 0) {\Large $y:$};
+  \node[\zcol] (zl) at (0, -1) {\Large $z:$};
+  \node[\xcol] (x1) at (1, 1) {\large $1$};
+  \node[\ycol] (y1) at (1, 0) {\large $1$};
+  \node[\zcol] (z1) at (1, -1) {\large $1$};
+  \node[\xcol] (x2) at (2, 1) {\large $1$};
+  \node[\ycol] (y2) at (2, 0) {\large $1$};
+  \node[\zcol] (z2) at (2, -1) {\large $1$};
+  \node[\xcol] (x3) at (3, 1) {\large $0$};
+  \node[\ycol] (y3) at (3, 0) {\large $0$};
+  \node[\zcol] (z3) at (3, -1) {\large $0$};
+  \node[\xcol] (x4) at (4, 1) {\large $0$};
+  \node[\ycol] (y4) at (4, 0) {\large $1$};
+  \node[\zcol] (z4) at (4, -1) {\large $0$};
+  \node[\xcol] (x5) at (5, 1) {\large $1$};
+  \node[\ycol] (y5) at (5, 0) {\large $0$};
+  \node[\zcol] (z5) at (5, -1) {\large $1$};
+  \node[\xcol] (x6) at (6, 1) {\large $1$};
+  \node[\ycol] (y6) at (6, 0) {\large $0$};
+  \node[\zcol] (z6) at (6, -1) {\large $1$};
+  \node[\xcol] (x7) at (7, 1) {\large $0$};
+  \node[\ycol] (y7) at (7, 0) {\large $1$};
+  \node[\zcol] (z7) at (7, -1) {\large $0$};
+  \node[\xcol] (x8) at (8, 1) {\large $1$};
+  \node[\ycol] (y8) at (8, 0) {\large $1$};
+  \node[\zcol] (z8) at (8, -1) {\large $1$};
+  \node[\xcol] (x9) at (9, 1) {\large $1$};
+  \node[\ycol] (y9) at (9, 0) {\large $0$};
+  \node[\zcol] (z9) at (9, -1) {\large $0$};
+  \node[\xcol] (x10) at (10, 1) {\large $0$};
+  \node[\ycol] (y10) at (10, 0) {\large $1$};
+  \node[\zcol] (z10) at (10, -1) {\large $0$};
+  \node[dashed, dash pattern={on 3pt off 5pt}, draw=\xcol, draw opacity=.5] () at (4, 1) {\large $\phantom{0} $};
+  \node[dashed, dash pattern={on 3pt off 5pt}, dash phase=4pt, draw=\ycol, draw opacity=.5] () at (4, 1) {\large $\phantom{0} $};
+  \node[dashed, dash pattern={on 3pt off 5pt}, draw=\xcol, draw opacity=.5] () at (9, 1) {\large $\phantom{1} $};
+  \node[dashed, dash pattern={on 3pt off 5pt}, dash phase=4pt, draw=\zcol, draw opacity=.5] () at (9, 1) {\large $\phantom{1} $};
+  \node[dashed, dash pattern={on 3pt off 5pt}, draw=\ycol, draw opacity=.5] () at (4, 0) {\large $\phantom{1} $};
+  \node[dashed, dash pattern={on 3pt off 5pt}, dash phase=4pt, draw=\xcol, draw opacity=.5] () at (4, 0) {\large $\phantom{1} $};
+  \node[dashed, dash pattern={on 3pt off 5pt}, draw=\ycol, draw opacity=.5] () at (4, 0) {\large $\phantom{1} $};
+  \node[dashed, dash pattern={on 3pt off 5pt}, dash phase=4pt, draw=\zcol, draw opacity=.5] () at (4, 0) {\large $\phantom{1} $};
+  \node[dashed, dash pattern={on 3pt off 5pt}, draw=\zcol, draw opacity=.5] () at (9, -1) {\large $\phantom{0} $};
+  \node[dashed, dash pattern={on 3pt off 5pt}, dash phase=4pt, draw=\xcol, draw opacity=.5] () at (9, -1) {\large $\phantom{0} $};
+  \node[dashed, dash pattern={on 3pt off 5pt}, draw=\zcol, draw opacity=.5] () at (4, -1) {\large $\phantom{1} $};
+  \node[dashed, dash pattern={on 3pt off 5pt}, dash phase=4pt, draw=\ycol, draw opacity=.5] () at (4, -1) {\large $\phantom{1} $};
+\end{tikzpicture}
+\end{document}
